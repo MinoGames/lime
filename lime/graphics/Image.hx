@@ -106,6 +106,9 @@ class Image {
 	public var width:Int;
 	public var x:Float;
 	public var y:Float;
+
+	public var originalWidth:Int;
+	public var originalHeight:Int;
 	
 	
 	public function new (buffer:ImageBuffer = null, offsetX:Int = 0, offsetY:Int = 0, width:Int = -1, height:Int = -1, color:Null<Int> = null, type:ImageType = null) {
@@ -115,6 +118,9 @@ class Image {
 		this.width = width;
 		this.height = height;
 		
+		this.originalWidth = width;
+		this.originalHeight = height;
+
 		version = 0;
 		
 		if (type == null) {
@@ -964,6 +970,9 @@ class Image {
 			
 		}
 		
+		originalWidth = width;
+		originalHeight = height;
+
 		buffer.width = newWidth;
 		buffer.height = newHeight;
 		
