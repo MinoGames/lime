@@ -30,6 +30,7 @@ class NativeHTTPRequest {
 	private var bytes:Bytes;
 	private var bytesLoaded:Int;
 	private var bytesTotal:Int;
+	private var position:Int;
 	private var curl:CURL;
 	private var parent:_IHTTPRequest;
 	private var promise:Promise<Bytes>;
@@ -169,7 +170,8 @@ class NativeHTTPRequest {
 	private function loadURL (uri:String, binary:Bool):Void {
 		
 		bytes = Bytes.alloc (0);
-		
+
+		position = 0;
 		bytesLoaded = 0;
 		bytesTotal = 0;
 		
@@ -321,8 +323,20 @@ class NativeHTTPRequest {
 		
 		parent.responseHeaders = [];
 		
-		// TODO
-		
+		var parts = Std.string(output).split(': ');
+		if (parts.length == 2) {
+			switch (parts[0]) {
+				case 'Content-Length': 
+					var length = Std.parseInt(parts[1]);
+					if (length > bytes.length) {
+						var cacheBytes = bytes;
+						bytes = Bytes.alloc (length);
+						bytes.blit (0, cacheBytes, 0, cacheBytes.length);
+					}
+				// TODO
+			}
+		}
+
 		return size * nmemb;
 		
 	}
@@ -355,11 +369,17 @@ class NativeHTTPRequest {
 	
 	private function curl_onWrite (output:Bytes, size:Int, nmemb:Int):Int {
 		
-		var cacheBytes = bytes;
-		bytes = Bytes.alloc (bytes.length + output.length);
-		bytes.blit (0, cacheBytes, 0, cacheBytes.length);
-		bytes.blit (cacheBytes.length, output, 0, output.length);
-		
+		if (bytes.length < position + output.length) {
+			var cacheBytes = bytes;
+			bytes = Bytes.alloc (position + output.length);
+			bytes.blit (0, cacheBytes, 0, cacheBytes.length);
+			bytes.blit (position, output, 0, output.length);
+		} else {
+			bytes.blit (position, output, 0, output.length);
+		}
+
+		position += output.length;
+
 		return size * nmemb;
 		
 	}
