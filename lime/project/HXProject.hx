@@ -142,6 +142,20 @@ class HXProject {
 		
 		switch (target) {
 			
+			case AIR:
+				
+				if (targetFlags.exists ("ios") || targetFlags.exists ("android")) {
+					
+					platformType = PlatformType.MOBILE;
+					
+				} else {
+					
+					platformType = PlatformType.DESKTOP;
+					
+				}
+				
+				architectures = [];
+			
 			case FLASH:
 				
 				platformType = PlatformType.WEB;
@@ -1131,7 +1145,7 @@ class HXProject {
 				
 				if (asset.embed == null) {
 					
-					embeddedAsset.embed = (platformType == PlatformType.WEB);
+					embeddedAsset.embed = (platformType == PlatformType.WEB || target == AIR);
 					
 				}
 				
