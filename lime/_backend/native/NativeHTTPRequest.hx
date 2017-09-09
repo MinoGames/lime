@@ -6,6 +6,7 @@ import haxe.Timer;
 import lime.app.Future;
 import lime.app.Promise;
 import lime.net.curl.CURLCode;
+import lime.net.curl.CURLEasy;
 import lime.net.curl.CURL;
 import lime.net.HTTPRequest;
 import lime.net.HTTPRequestMethod;
@@ -29,7 +30,6 @@ class NativeHTTPRequest {
 	private var bytes:Bytes;
 	private var bytesLoaded:Int;
 	private var bytesTotal:Int;
-	private var canceled:Bool;
 	private var curl:CURL;
 	private var parent:_IHTTPRequest;
 	private var promise:Promise<Bytes>;
@@ -45,8 +45,6 @@ class NativeHTTPRequest {
 	
 	
 	public function cancel ():Void {
-		
-		canceled = true;
 		
 		if (curl != null) {
 			
@@ -120,11 +118,11 @@ class NativeHTTPRequest {
 		
 		if (curl == null) {
 			
-			curl = new CURL ();
+			curl = CURLEasy.init ();
 			
 		} else {
 			
-			curl.reset ();
+			CURLEasy.reset (curl);
 			
 		}
 		
@@ -165,41 +163,41 @@ class NativeHTTPRequest {
 			}
 		}
 		
-		curl.setOption (URL, uri);
+		CURLEasy.setopt (curl, URL, uri);
 		
 		switch (parent.method) {
 			
 			case HEAD:
 				
-				curl.setOption (NOBODY, true);
+				CURLEasy.setopt (curl, NOBODY, true);
 			
 			case GET:
 				
-				curl.setOption (HTTPGET, true);
+				CURLEasy.setopt (curl, HTTPGET, true);
 			
 			case POST:
 				
-				curl.setOption (POST, true);
-				curl.setOption (READFUNCTION, curl_onRead.bind (_, data));
-				curl.setOption (POSTFIELDSIZE, data.length);
-				curl.setOption (INFILESIZE, data.length);
+				CURLEasy.setopt (curl, POST, true);
+				CURLEasy.setopt (curl, READFUNCTION, curl_onRead.bind (_, data));
+				CURLEasy.setopt (curl, POSTFIELDSIZE, data.length);
+				CURLEasy.setopt (curl, INFILESIZE, data.length);
 			
 			case PUT:
 				
-				curl.setOption (UPLOAD, true);
-				curl.setOption (READFUNCTION, curl_onRead.bind (_, data));
-				curl.setOption (INFILESIZE, data.length);
+				CURLEasy.setopt (curl, UPLOAD, true);
+				CURLEasy.setopt (curl, READFUNCTION, curl_onRead.bind (_, data));
+				CURLEasy.setopt (curl, INFILESIZE, data.length);
 			
 			case _:
 				
-				curl.setOption (CUSTOMREQUEST, Std.string (parent.method));
-				curl.setOption (READFUNCTION, curl_onRead.bind (_, data));
-				curl.setOption (INFILESIZE, data.length);
+				CURLEasy.setopt (curl, CUSTOMREQUEST, Std.string (parent.method));
+				CURLEasy.setopt (curl, READFUNCTION, curl_onRead.bind (_, data));
+				CURLEasy.setopt (curl, INFILESIZE, data.length);
 			
 		}
 		
-		curl.setOption (FOLLOWLOCATION, parent.followRedirects);
-		curl.setOption (AUTOREFERER, true);
+		CURLEasy.setopt (curl, FOLLOWLOCATION, parent.followRedirects);
+		CURLEasy.setopt (curl, AUTOREFERER, true);
 		
 		var headers = [];
 		headers.push ("Expect: ");
@@ -246,31 +244,30 @@ class NativeHTTPRequest {
 			
 		}
 		
-		curl.setOption (HTTPHEADER, headers);
+		CURLEasy.setopt (curl, HTTPHEADER, headers);
 		
-		curl.setOption (PROGRESSFUNCTION, curl_onProgress);
-		curl.setOption (WRITEFUNCTION, curl_onWrite);
+		CURLEasy.setopt (curl, PROGRESSFUNCTION, curl_onProgress);
+		CURLEasy.setopt (curl, WRITEFUNCTION, curl_onWrite);
 		
 		if (parent.enableResponseHeaders) {
 			
-			curl.setOption (HEADERFUNCTION, curl_onHeader);
+			CURLEasy.setopt (curl, HEADERFUNCTION, curl_onHeader);
 			
 		}
 		
-		curl.setOption (SSL_VERIFYPEER, false);
-		curl.setOption (SSL_VERIFYHOST, 0);
-		curl.setOption (USERAGENT, parent.userAgent == null ? "libcurl-agent/1.0" : parent.userAgent);
+		CURLEasy.setopt (curl, SSL_VERIFYPEER, false);
+		CURLEasy.setopt (curl, SSL_VERIFYHOST, 0);
+		CURLEasy.setopt (curl, USERAGENT, parent.userAgent == null ? "libcurl-agent/1.0" : parent.userAgent);
 		
-		//curl.setOption (CONNECTTIMEOUT, 30);
-		curl.setOption (NOSIGNAL, true);
+		//CURLEasy.setopt (curl, CONNECTTIMEOUT, 30);
+		CURLEasy.setopt (curl, NOSIGNAL, true);
 		
-		curl.setOption (TRANSFERTEXT, !binary);
+		CURLEasy.setopt (curl, TRANSFERTEXT, !binary);
 		
-		var result = curl.perform ();
-		parent.responseStatus = curl.getInfo (RESPONSE_CODE);
+		var result = CURLEasy.perform (curl);
+		parent.responseStatus = CURLEasy.getinfo (curl, RESPONSE_CODE);
 		
-		curl.cleanup ();
-		curl = null;
+		CURLEasy.cleanup (curl);
 		
 		if (result == CURLCode.OK) {
 			
@@ -278,7 +275,7 @@ class NativeHTTPRequest {
 			
 		} else {
 			
-			threadPool.sendError ({ instance: this, promise: promise, error: CURL.strerror (result) });
+			threadPool.sendError ({ instance: this, promise: promise, error: result });
 			
 		}
 		
@@ -308,8 +305,6 @@ class NativeHTTPRequest {
 			
 		}
 		
-		canceled = false;
-		
 		if (parent.timeout > 0) {
 			
 			timeout = Timer.delay (function () {
@@ -318,7 +313,7 @@ class NativeHTTPRequest {
 					
 					//cancel ();
 					
-					this.promise.error (CURL.strerror (CURLCode.OPERATION_TIMEDOUT));
+					this.promise.error (CURLCode.OPERATION_TIMEDOUT);
 					
 				}
 				
