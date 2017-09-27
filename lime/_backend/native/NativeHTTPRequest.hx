@@ -109,27 +109,6 @@ class NativeHTTPRequest {
 		}
 		
 	}
-
-
-	private function doWork_startTimeout ():Void {
-
-		if (parent.timeout > 0) {
-			
-			timeout = Timer.delay (function () {
-				
-				if (this.promise != null && bytesLoaded == 0 && bytesTotal == 0 && !this.promise.isComplete && !this.promise.isError) {
-					
-					//cancel ();
-					
-					this.promise.error (CURL.strerror (CURLCode.OPERATION_TIMEDOUT));
-					
-				}
-				
-			}, parent.timeout);
-			
-		}
-
-	}
 	
 	
 	private function doWork_loadURL (uri:String, binary:Bool):Void {
@@ -341,6 +320,22 @@ class NativeHTTPRequest {
 		
 		canceled = false;
 		
+		if (parent.timeout > 0) {
+			
+			timeout = Timer.delay (function () {
+				
+				if (this.promise != null && bytesLoaded == 0 && bytesTotal == 0 && !this.promise.isComplete && !this.promise.isError) {
+					
+					//cancel ();
+					
+					this.promise.error (CURL.strerror (CURLCode.OPERATION_TIMEDOUT));
+					
+				}
+				
+			}, parent.timeout);
+			
+		}
+		
 		threadPool.queue ({ instance: this, uri: uri, binary: binary });
 		
 		return promise.future;
@@ -491,8 +486,7 @@ class NativeHTTPRequest {
 			instance.doWork_loadURL (uri, binary);
 			
 		}
-
-		instance.doWork_startTimeout ();
+		
 	}
 	
 	
