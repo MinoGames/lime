@@ -6,7 +6,7 @@
 	
 	::if (ANDROID_PERMISSIONS != null)::::foreach ANDROID_PERMISSIONS::<uses-permission android:name="::__current__::" />
 	::end::::end::
-	
+	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-sdk android:minSdkVersion="::ANDROID_MINIMUM_SDK_VERSION::" android:targetSdkVersion="::ANDROID_TARGET_SDK_VERSION::"/>
 	
 	<application android:label="::APP_TITLE::" ::if (HAS_ICON):: android:icon="@drawable/icon"::end:: android:allowBackup="true" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:hardwareAccelerated="true">
@@ -18,9 +18,13 @@
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 				<category android:name="tv.ouya.intent.category.GAME" />
-				
+
 			</intent-filter>
-			
+
+			<meta-data
+				android:name="io.fabric.ApiKey"
+				android:value="7720d1021a8f0a648801159b6d204a68a7d38bfe" />
+
 		</activity>
 		
 	</application>
