@@ -29,7 +29,6 @@ import android.graphics.drawable.Drawable;
 import android.media.*;
 import android.hardware.*;
 import android.content.pm.ActivityInfo;
-import com.anthonycr.grant.PermissionsManager;
 
 /**
     SDL Activity
@@ -199,14 +198,6 @@ public class SDLActivity extends Activity {
                 SDLActivity.onNativeDropFile(filename);
             }
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, 
-				    String[] permissions, 
-				    int[] grantResults) {
-       Log.d(TAG, "onRequestPermissionsResult()");
-       PermissionsManager.getInstance().notifyPermissionsChange(permissions, grantResults);
     }
 
     // Events
