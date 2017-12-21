@@ -57,6 +57,16 @@ public class ::className:: extends Extension {
 		
 	}
 	
+
+    /**
+	 * Called when the activity receives th results for permission requests.
+	 */
+	public boolean onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+		return true;
+
+	}
+
 	
 	/**
 	 * Called when the activity is starting.
