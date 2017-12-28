@@ -309,7 +309,16 @@ public class GameActivity extends SDLActivity {
 	}
 	::end::
 	
-	
+
+	@Override public void onWindowFocusChanged (boolean hasFocus) {
+		
+		super.onWindowFocusChanged (hasFocus);
+		
+		updateSystemUI ();
+		
+	}
+
+
 	public static void openFile (String path) {
 		
 		try {
