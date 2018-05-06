@@ -456,7 +456,22 @@ class AssetLibrary {
 						
 						assetsTotal++;
 						
-						var future = loadImage (id, map.get(id));
+                        /*var buffer = new lime.graphics.ImageBuffer(null, 100, 100);
+                        var imageTemp = new Image(buffer, 0, 0, 100, 100, 0xFF0000);
+
+						haxe.Timer.delay(function() {
+                            
+                            var futureReal = loadImage (id, map.get(id));
+                            futureReal.onComplete(function(image) {
+                                imageTemp.copyPixels(image, image.rect, new lime.math.Vector2(0, 0));
+                                trace(':::::::::::::::::::::::::::::::::');
+                            });
+
+                        }, 10000);*/
+
+                        //var future = Future.withValue(imageTemp);
+                        var future = loadImage (id, map.get(id));
+                        
 						future.onProgress (load_onProgress.bind (id));
 						future.onError (load_onError.bind (id));
 						future.onComplete (loadImage_onComplete.bind (id));
