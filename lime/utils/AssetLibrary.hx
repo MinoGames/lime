@@ -1,6 +1,5 @@
 package lime.utils;
 
-
 import haxe.io.Path;
 import lime.app.Event;
 import lime.app.Future;
@@ -410,7 +409,90 @@ class AssetLibrary {
 		
 	}
 	
-	
+
+    public function loadFromMap (map:haxe.ds.StringMap<Bytes>):Future<AssetLibrary> {
+        
+        if (loaded) {
+			
+			return Future.withValue (this);
+			
+		}
+		
+		if (promise == null) {
+			
+			promise = new Promise<AssetLibrary> ();
+			bytesLoadedCache = new Map ();
+			
+			assetsLoaded = 0;
+			assetsTotal = 1;
+			
+			for (id in preload.keys ()) {
+				
+				if (!preload.get (id)) continue;
+				
+				Log.verbose ("Preloading MAP asset: " + id + " [" + types.get (id) + "]");
+				
+				switch (types.get (id)) {
+					
+					case BINARY:
+						
+						assetsTotal++;
+						
+						var future = loadBytes (id, map.get(id));
+						future.onProgress (load_onProgress.bind (id));
+						future.onError (load_onError.bind (id));
+						future.onComplete (loadBytes_onComplete.bind (id));
+					
+					case FONT:
+						
+						assetsTotal++;
+						
+						var future = loadFont (id, map.get(id));
+						future.onProgress (load_onProgress.bind (id));
+						future.onError (load_onError.bind (id));
+						future.onComplete (loadFont_onComplete.bind (id));
+					
+					case IMAGE:
+						
+						assetsTotal++;
+						
+						var future = loadImage (id, map.get(id));
+						future.onProgress (load_onProgress.bind (id));
+						future.onError (load_onError.bind (id));
+						future.onComplete (loadImage_onComplete.bind (id));
+					
+					case MUSIC, SOUND:
+						
+						assetsTotal++;
+						
+						var future = loadAudioBuffer (id, map.get(id));
+						future.onProgress (load_onProgress.bind (id));
+						future.onError (load_onError.bind (id));
+						future.onComplete (loadAudioBuffer_onComplete.bind (id));
+					
+					case TEXT:
+						
+						assetsTotal++;
+						
+						var future = loadText (id, map.get(id));
+						future.onProgress (load_onProgress.bind (id));
+						future.onError (load_onError.bind (id));
+						future.onComplete (loadText_onComplete.bind (id));
+					
+					default:
+					
+				}
+				
+			}
+			
+			__assetLoaded (null);
+			
+		}
+		
+		return promise.future;
+
+    }
+
 	public function load ():Future<AssetLibrary> {
 		
 		if (loaded) {
@@ -495,7 +577,7 @@ class AssetLibrary {
 	}
 	
 	
-	public function loadAudioBuffer (id:String):Future<AudioBuffer> {
+	public function loadAudioBuffer (id:String, bytes:Bytes = null):Future<AudioBuffer> {
 		
 		if (cachedAudioBuffers.exists (id)) {
 			
@@ -507,7 +589,11 @@ class AssetLibrary {
 			
 		} else {
 			
-			if (pathGroups.exists (id)) {
+            if (bytes != null) {
+
+                return Future.withValue(AudioBuffer.fromBytes(bytes));
+
+            } else if (pathGroups.exists (id)) {
 				
 				return AudioBuffer.loadFromFiles (pathGroups.get (id));
 				
@@ -522,7 +608,7 @@ class AssetLibrary {
 	}
 	
 	
-	public function loadBytes (id:String):Future<Bytes> {
+	public function loadBytes (id:String, bytes:Bytes = null):Future<Bytes> {
 		
 		if (cachedBytes.exists (id)) {
 			
@@ -536,7 +622,11 @@ class AssetLibrary {
 			return Future.withValue (Type.createInstance (classTypes.get (id), []));
 			#end
 			
-		} else {
+		} else if (bytes != null) {
+
+            return Future.withValue(bytes);
+
+        } else {
 			
 			return Bytes.loadFromFile (paths.get (id));
 			
@@ -545,7 +635,7 @@ class AssetLibrary {
 	}
 	
 	
-	public function loadFont (id:String):Future<Font> {
+	public function loadFont (id:String, bytes:Bytes = null):Future<Font> {
 		
 		if (cachedFonts.exists (id)) {
 			
@@ -560,7 +650,11 @@ class AssetLibrary {
 			#else
 			return Future.withValue (font);
 			#end
-			
+
+        } else if (bytes != null) {
+
+            return Font.loadFromBytes(bytes);
+
 		} else {
 			
 			#if (js && html5)
@@ -613,7 +707,7 @@ class AssetLibrary {
 	}
 	
 	
-	public function loadImage (id:String):Future<Image> {
+	public function loadImage (id:String, bytes:Bytes = null):Future<Image> {
 		
 		if (cachedImages.exists (id)) {
 			
@@ -623,6 +717,10 @@ class AssetLibrary {
 			
 			return Future.withValue (Type.createInstance (classTypes.get (id), []));
 			
+        } else if (bytes != null) {
+
+            return Image.loadFromBytes(bytes);
+
 		} else {
 			
 			return Image.loadFromFile (paths.get (id));
@@ -632,7 +730,7 @@ class AssetLibrary {
 	}
 	
 	
-	public function loadText (id:String):Future<String> {
+	public function loadText (id:String, bytes:Bytes = null):Future<String> {
 		
 		if (cachedText.exists (id)) {
 			
@@ -653,7 +751,11 @@ class AssetLibrary {
 				return Future.withValue (text);
 				
 			}
-			
+
+        } else if (bytes != null) {
+
+            return Future.withValue(bytes.toString());
+
 		} else {
 			
 			var request = new HTTPRequest<String> ();

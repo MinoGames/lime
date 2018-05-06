@@ -21,7 +21,7 @@ class HTML5HTTPRequest {
 	
 	
 	private static var activeRequests = 0;
-	private static var requestLimit = 4;
+	private static var requestLimit = 999999;//4;
 	private static var requestQueue = new List<QueueItem> ();
 	
 	private var binary:Bool;
