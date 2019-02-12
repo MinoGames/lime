@@ -78,6 +78,8 @@ class IOSHelper {
 			commands = commands.concat (additionalArguments);
 			
 		}
+
+		commands.push ("-allowProvisioningUpdates");
 		
 		ProcessHelper.runCommand (workingDirectory, "xcodebuild", commands);
 		
