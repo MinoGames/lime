@@ -139,6 +139,14 @@ class IOSPlatform extends PlatformTarget {
 		}
 		
 		var context = project.templateContext;
+
+		// Add haxedef to Template
+		trace('Setting haxedefs');
+		context.JD = true;
+		for (def in project.haxedefs.keys()) {
+			trace('haxedef', def, project.haxedefs.get(def));
+			Reflect.setField(context, def, project.haxedefs.get(def));	
+		}
 		
 		context.HAS_ICON = false;
 		context.HAS_LAUNCH_IMAGE = false;
