@@ -246,7 +246,7 @@ class MacPlatform extends PlatformTarget {
 			
 		}
 		
-		if (!targetFlags.exists ("64") && (command == "rebuild" || PlatformHelper.hostArchitecture == Architecture.X86)) {
+		if (!targetFlags.exists ("64") && (targetFlags.exists ("32") || PlatformHelper.hostArchitecture == Architecture.X86)) {
 			
 			commands.push ([ "-Dmac", "-DHXCPP_M32" ]);
 			
