@@ -366,7 +366,7 @@ class NativeApplication {
 			
 			if (keyCode == APP_CONTROL_BACK && modifier == KeyModifier.NONE && type == KEY_UP && !window.onKeyUp.canceled) {
 				
-				System.exit (0);
+				//System.exit (0);
 				
 			}
 			
