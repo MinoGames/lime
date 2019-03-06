@@ -86,7 +86,7 @@ public class GameActivity extends SDLActivity {
 			
 		}
 		
-		super.onBackPressed ();
+		//super.onBackPressed ();
 		
 	}
 	
