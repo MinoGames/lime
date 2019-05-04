@@ -113,6 +113,8 @@ namespace lime {
 		uint8_t* sourceData = (uint8_t*)sourceImage->buffer->data->Data ();
 		uint8_t* destData = (uint8_t*)image->buffer->data->Data ();
 		
+		if (!sourceData || !destData) return;
+
 		ImageDataView sourceView = ImageDataView (sourceImage, sourceRect);
 		Rectangle destRect = Rectangle (destPoint->x, destPoint->y, sourceView.width, sourceView.height);
 		ImageDataView destView = ImageDataView (image, &destRect);
