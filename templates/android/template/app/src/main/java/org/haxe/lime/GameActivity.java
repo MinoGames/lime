@@ -127,10 +127,11 @@ public class GameActivity extends SDLActivity {
 			::if (ANDROID_EXTENSIONS != null)::::foreach ANDROID_EXTENSIONS::
 			
 			try {
-				extensions.add (new ::__current__:: ());::end::::end::
+				extensions.add (new ::__current__:: ());
 			} catch (Exception exception) {
 
 			}
+			::end::::end::
 			
 		}
 		
