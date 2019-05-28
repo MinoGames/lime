@@ -135,6 +135,8 @@ class RunScript
 	{
 		var args = Sys.args();
 
+		Log.warn('*** MINO BUILD ***');
+
 		if (args.length > 2 && args[0] == "rebuild" && args[1] == "tools")
 		{
 			var lastArgument = new Path(args[args.length - 1]).toString();
