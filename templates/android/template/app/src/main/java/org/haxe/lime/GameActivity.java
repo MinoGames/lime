@@ -109,6 +109,13 @@ public class GameActivity extends SDLActivity {
 
 		super.onCreate (state);
 
+		// Just ignore all errors
+		Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+			public void uncaughtException(Thread t, Throwable e) {
+				e.printStackTrace();
+			}
+		});
+
 		assetManager = getAssets ();
 		handler = new Handler ();
 
@@ -145,7 +152,11 @@ public class GameActivity extends SDLActivity {
 
 		for (Extension extension : extensions) {
 
-			extension.onCreate (state);
+			try {
+				extension.onCreate (state);
+		   } catch (Throwable e) {
+				// Meh
+		   }
 
 		}
 
