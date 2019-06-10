@@ -5,10 +5,14 @@ import javax.swing.border.EmptyBorder;
 
 apply plugin: 'com.android.application'
 
+repositories {
+    jcenter()
+}
+
 android {
 	compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
 	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
-	
+
 	bundle {
 		language {
 			enableSplit = true
@@ -29,7 +33,7 @@ android {
 		versionName project.VERSION_NAME
 		::if (languages != null)::resConfigs ::foreach languages::"::__current__::", ::end::""::end::
 	}
-	
+
 	::if KEY_STORE::
 	signingConfigs {
 		if (project.KEY_STORE_PASSWORD == 'null') {
@@ -37,11 +41,11 @@ android {
 			keyStoreFile = keyStoreFile[keyStoreFile.length - 1]
 			project.KEY_STORE_PASSWORD = getPassword('\nPlease enter key password for ' + keyStoreFile + ':');
 		}
-		
+
 		if (project.KEY_STORE_ALIAS_PASSWORD == 'null') {
 			project.KEY_STORE_ALIAS_PASSWORD = getPassword("\nPlease enter key alias password for alias " + project.KEY_STORE_ALIAS + ":")
 		}
-		
+
 		release {
 			storeFile file(project.KEY_STORE)
 			storePassword project.KEY_STORE_PASSWORD
@@ -54,7 +58,7 @@ android {
 	if(signingFile.exists()) {
 		Properties signing = new Properties()
 		signing.load(new FileInputStream(signingFile))
-		
+
 		signingConfigs {
 			release {
 				storeFile file(signing["KEY_STORE"])
@@ -69,18 +73,18 @@ android {
 		}
 	}
 	::end::
-	
+
 	buildTypes {
 		release {
 			minifyEnabled false
 			signingConfig signingConfigs.release
 		}
 	}
-	
+
 	android.applicationVariants.all { variant ->
 		variant.outputs.each { output ->
 			/*def outputFile = output.outputFile
-			
+
 			if (outputFile != null && outputFile.name.endsWith('.apk')) {
 				output.outputFile = new File(outputFile.parent, "::APP_FILE::-" + variant.buildType.name + ".apk")
 			}*/
@@ -90,6 +94,7 @@ android {
 
 dependencies {
 	implementation fileTree(dir: 'libs', include: ['*.jar'])
+	implementation 'com.getkeepsafe.relinker:relinker:1.3.1'
 	::if (ANDROID_LIBRARY_PROJECTS)::::foreach (ANDROID_LIBRARY_PROJECTS)::implementation project(':deps:::name::')
 	::end::::end::
 }
@@ -109,11 +114,11 @@ def getPassword(message) {
 				show: true
 			) {
 				lookAndFeel('system')
-				
+
 				panel(border: new EmptyBorder(10, 10, 10, 10)) {
 					gridBagLayout()
 					def gbc = new GridBagConstraints();
-					
+
 					gbc.gridx = 0
 					gbc.gridy = 0
 					gbc.fill = GridBagConstraints.HORIZONTAL
@@ -125,10 +130,10 @@ def getPassword(message) {
 						'</body>' +
 						'</html>',
 						constraints: gbc)
-					
+
 					gbc.gridy = 1
 					input = passwordField(constraints: gbc)
-					
+
 					gbc.gridy = 2
 					gbc.fill = GridBagConstraints.NONE
 					gbc.insets = [0, 0, 0, 0]
