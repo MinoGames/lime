@@ -109,14 +109,14 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
      * It can be overridden by derived classes.
      */
     protected String getMainSharedObject() {
-        String library;
+        /*String library;
         String[] libraries = SDLActivity.mSingleton.getLibraries();
         if (libraries.length > 0) {
             library = "lib" + libraries[libraries.length - 1] + ".so";
         } else {
             library = "libmain.so";
-        }
-        return getContext().getApplicationInfo().nativeLibraryDir + "/" + library;
+        }*/
+        return getContext().getApplicationInfo().nativeLibraryDir + "/";// + library;
     }
 
     /**
@@ -162,6 +162,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
      */
     protected String[] getArguments() {
         return new String[0];
+        //return {getContext().getApplicationInfo().nativeLibraryDir + "/"};
     }
 
     public static void initialize() {
@@ -195,6 +196,8 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         } catch (Exception e) {
             Log.v(TAG, "modify thread properties failed " + e.toString());
         }
+
+        SDL.setContext(this);
 
         // Load shared libraries
         String errorMsgBrokenLib = "";
@@ -241,7 +244,6 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
 
         // So we can call stuff from static callbacks
         mSingleton = this;
-        SDL.setContext(this);
 
         mClipboardHandler = new SDLClipboardHandler_API11();
 

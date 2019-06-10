@@ -18,6 +18,8 @@ import android.webkit.MimeTypeMap;
 import org.haxe.extension.Extension;
 import org.libsdl.app.SDLActivity;
 
+import com.getkeepsafe.relinker.ReLinker;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,17 +53,18 @@ public class GameActivity extends SDLActivity {
 
 		return new String[] {
 			::foreach ndlls::"::name::",
-			::end::"ApplicationMain"
+			::end::
+			"ApplicationMain"
 		};
 
 	}
 
 
-	@Override protected String getMainSharedObject () {
+	/*@Override protected String getMainSharedObject () {
 
-		return "libApplicationMain.so";
+        return "libApplicationMain.so";
 
-	}
+	}*/
 
 
 	@Override protected String getMainFunction () {
