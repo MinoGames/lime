@@ -102,9 +102,11 @@ class AndroidPlatform extends PlatformTarget
 				suffix = "-x86.so";
 			}
 
-			for (ndll in project.ndlls)
-			{
-				ProjectHelper.copyLibrary(project, ndll, "Android", "lib", suffix, path, project.debug, ".so");
+			if (!project.targetFlags.exists("static")) {
+				for (ndll in project.ndlls)
+				{
+					ProjectHelper.copyLibrary(project, ndll, "Android", "lib", suffix, path, project.debug, ".so");
+				}
 			}
 
 			System.runCommand("", "haxe", haxeParams);
