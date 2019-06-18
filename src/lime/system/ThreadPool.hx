@@ -23,7 +23,7 @@ import neko.vm.Thread;
 class ThreadPool
 {
 	public var currentThreads(default, null):Int;
-	public var doWork = new Event<Dynamic->Void>();
+	@:privateAccess public var doWork = new Event<Dynamic->Void>();
 	public var maxThreads:Int;
 	public var minThreads:Int;
 	public var onComplete = new Event<Dynamic->Void>();

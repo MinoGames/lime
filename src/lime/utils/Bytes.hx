@@ -110,7 +110,7 @@ abstract Bytes(HaxeBytes) from HaxeBytes to HaxeBytes
 
 	public static function loadFromFile(path:String):Future<Bytes>
 	{
-		var request = new HTTPRequest<Bytes>();
+		@:privateAccess var request = new HTTPRequest<Bytes>();
 		return request.load(path);
 	}
 
