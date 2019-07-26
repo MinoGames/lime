@@ -38,7 +38,14 @@
 	<div id="content"></div>
 
 	<script type="text/javascript">
-		lime.embed ("::APP_FILE::", "content", ::WIN_WIDTH::, ::WIN_HEIGHT::);
+		if (lime) {
+			lime.embed ("::APP_FILE::", "content", ::WIN_WIDTH::, ::WIN_HEIGHT::);
+		} else {
+			setTimeout(function() {
+				location.reload();
+			}, 500);
+		}
+
 	</script>
 
 </body>
