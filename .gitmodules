@@ -6,7 +6,7 @@
 	url = git@github.com:starburst997/sdl.git
 [submodule "project/lib/openal"]
 	path = project/lib/openal
-	url = https://github.com/native-toolkit/openal
+	url = https://github.com/starburst997/openal
 [submodule "project/lib/curl"]
 	path = project/lib/curl
 	url = https://github.com/native-toolkit/curl
