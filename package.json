@@ -1,4 +1,10 @@
 {
   "name": "lime",
-  "private": true
+  "private": true,
+  "scripts": {
+    "tools": "cd tools && haxe tools.hxml && cd .. && NEKOPATH=`haxelib path lime | sed -n 2p`/../ndll/Mac64 lix run lime rebuild tools"
+  },
+  "dependencies": {
+    "lix": "starburst997/lix.client#dc5924c2a9e45b5f240e49caac65c76b8bdea0db"
+  }
 }

@@ -1,0 +1,5 @@
+-D lime=7.5.0
+# @install: lix --submodules --silent download "git:git@github.com:minogames/lime#f633a2fbff18fcd8aea6d353f5ee9a78a0c3cee4" into lime/7.5.0/git/f633a2fbff18fcd8aea6d353f5ee9a78a0c3cee4
+# @run: haxelib run-dir lime /Users/jdboivin/projects/lime-mino
+-cp /Users/jdboivin/projects/lime-mino/src
+--macro lime._internal.macros.DefineMacro.run()
