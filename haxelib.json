@@ -1,0 +1,11 @@
+{
+	"name": "lime",
+	"url": "https://github.com/openfl/lime",
+	"license": "MIT",
+	"tags": [],
+	"description": "A foundational Haxe framework for cross-platform development",
+	"version": "7.2.0",
+	"releasenote": "Improved support for Haxe 4 preview 5, Lime Bytes fixes, other improvements",
+	"contributors": [ "singmajesty" ],
+	"classPath": "src"
+}
