@@ -503,7 +503,7 @@ class Font {
 
 			}
 
-			ascender = NativeCFFI.lime_font_get_ascender (src);
+			ascender = NativeCFFI.lime_font_get_ascender (src) + 200;
 			descender = NativeCFFI.lime_font_get_descender (src);
 			height = NativeCFFI.lime_font_get_height (src);
 			numGlyphs = NativeCFFI.lime_font_get_num_glyphs (src);
