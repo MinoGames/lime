@@ -2093,6 +2093,62 @@ namespace lime {
 
 	}
 
+	void lime_cairo_glyph_path (value handle, value glyphs) {
+
+		if (!init) {
+
+			id_index = val_id ("index");
+			id_x = val_id ("x");
+			id_y = val_id ("y");
+
+		}
+
+		int length = val_array_size (glyphs);
+		cairo_glyph_t* _glyphs = cairo_glyph_allocate (length);
+
+		value glyph;
+
+		for (int i = 0; i < length; i++) {
+
+			glyph = val_array_i (glyphs, i);
+			_glyphs[i].index = val_int (val_field (glyph, id_index));
+			_glyphs[i].x = val_number (val_field (glyph, id_x));
+			_glyphs[i].y = val_number (val_field (glyph, id_y));
+
+		}
+
+		cairo_glyph_path ((cairo_t*)val_data (handle), _glyphs, length);
+		cairo_glyph_free (_glyphs);
+
+	}
+
+
+	HL_PRIM void hl_lime_cairo_glyph_path (HL_CFFIPointer* handle, varray* glyphs) {
+
+		const int id_index = hl_hash_utf8 ("index");
+		const int id_x = hl_hash_utf8 ("x");
+		const int id_y = hl_hash_utf8 ("y");
+
+		int length = glyphs->size;
+		HL_CairoGlyph** glyphData = hl_aptr (glyphs, HL_CairoGlyph*);
+		cairo_glyph_t* _glyphs = cairo_glyph_allocate (length);
+
+		HL_CairoGlyph* glyph;
+
+		for (int i = 0; i < length; i++) {
+
+			glyph = *glyphData++;
+			_glyphs[i].index = glyph->index;
+			_glyphs[i].x = glyph->x;
+			_glyphs[i].y = glyph->y;
+
+		}
+
+		cairo_glyph_path ((cairo_t*)handle->ptr, _glyphs, length);
+		cairo_glyph_free (_glyphs);
+
+	}
+
 
 	void lime_cairo_show_page (value handle) {
 
@@ -2382,6 +2438,7 @@ namespace lime {
 	DEFINE_PRIME4v (lime_cairo_set_source_surface);
 	DEFINE_PRIME2v (lime_cairo_set_tolerance);
 	DEFINE_PRIME2v (lime_cairo_show_glyphs);
+	DEFINE_PRIME2v (lime_cairo_glyph_path);
 	DEFINE_PRIME1v (lime_cairo_show_page);
 	DEFINE_PRIME2v (lime_cairo_show_text);
 	DEFINE_PRIME1 (lime_cairo_status);
@@ -2504,6 +2561,7 @@ namespace lime {
 	DEFINE_HL_PRIM (_VOID, lime_cairo_set_source_surface, _TCFFIPOINTER _TCFFIPOINTER _F64 _F64);
 	DEFINE_HL_PRIM (_VOID, lime_cairo_set_tolerance, _TCFFIPOINTER _F64);
 	DEFINE_HL_PRIM (_VOID, lime_cairo_show_glyphs, _TCFFIPOINTER _ARR);
+	DEFINE_HL_PRIM (_VOID, lime_cairo_glyph_path, _TCFFIPOINTER _ARR);
 	DEFINE_HL_PRIM (_VOID, lime_cairo_show_page, _TCFFIPOINTER);
 	DEFINE_HL_PRIM (_VOID, lime_cairo_show_text, _TCFFIPOINTER _STRING);
 	DEFINE_HL_PRIM (_I32, lime_cairo_status, _TCFFIPOINTER);

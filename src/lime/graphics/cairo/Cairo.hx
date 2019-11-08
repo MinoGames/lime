@@ -371,6 +371,19 @@ class Cairo
 		#end
 	}
 
+	public function glyphPath(glyphs:Array<CairoGlyph>):Void
+	{
+		#if (lime_cffi && lime_cairo && !macro)
+		#if hl
+		var _glyphs = new hl.NativeArray<CairoGlyph>(glyphs.length);
+		for (i in 0...glyphs.length)
+			_glyphs[i] = glyphs[i];
+		var glyphs = _glyphs;
+		#end
+		NativeCFFI.lime_cairo_glyph_path(handle, glyphs);
+		#end
+	}
+
 	public function showPage():Void
 	{
 		#if (lime_cffi && lime_cairo && !macro)

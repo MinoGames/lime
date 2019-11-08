@@ -2453,6 +2453,8 @@ class NativeCFFI
 
 	@:cffi private static function lime_cairo_show_glyphs(handle:CFFIPointer, glyphs:Dynamic):Void;
 
+	@:cffi private static function lime_cairo_glyph_path(handle:CFFIPointer, glyphs:Dynamic):Void;
+
 	@:cffi private static function lime_cairo_show_page(handle:CFFIPointer):Void;
 
 	@:cffi private static function lime_cairo_show_text(handle:CFFIPointer, text:String):Void;
@@ -2655,6 +2657,8 @@ class NativeCFFI
 		._loadPrime("lime", "lime_cairo_set_tolerance", "odv", false));
 	private static var lime_cairo_show_glyphs = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime
 		._loadPrime("lime", "lime_cairo_show_glyphs", "oov", false));
+	private static var lime_cairo_glyph_path = new cpp.Callable<cpp.Object->cpp.Object->cpp.Void>(cpp.Prime
+		._loadPrime("lime", "lime_cairo_glyph_path", "oov", false));
 	private static var lime_cairo_show_page = new cpp.Callable<cpp.Object->cpp.Void>(cpp.Prime._loadPrime("lime", "lime_cairo_show_page", "ov", false));
 	private static var lime_cairo_show_text = new cpp.Callable<cpp.Object->String->cpp.Void>(cpp.Prime
 		._loadPrime("lime", "lime_cairo_show_text", "osv", false));
@@ -2812,6 +2816,7 @@ class NativeCFFI
 	private static var lime_cairo_set_source_surface = CFFI.load("lime", "lime_cairo_set_source_surface", 4);
 	private static var lime_cairo_set_tolerance = CFFI.load("lime", "lime_cairo_set_tolerance", 2);
 	private static var lime_cairo_show_glyphs = CFFI.load("lime", "lime_cairo_show_glyphs", 2);
+	private static var lime_cairo_glyph_path = CFFI.load("lime", "lime_cairo_glyph_path", 2);
 	private static var lime_cairo_show_page = CFFI.load("lime", "lime_cairo_show_page", 1);
 	private static var lime_cairo_show_text = CFFI.load("lime", "lime_cairo_show_text", 2);
 	private static var lime_cairo_status = CFFI.load("lime", "lime_cairo_status", 1);
@@ -3082,6 +3087,8 @@ class NativeCFFI
 	@:hlNative("lime", "lime_cairo_set_tolerance") private static function lime_cairo_set_tolerance(handle:CFFIPointer, tolerance:Float):Void {}
 
 	@:hlNative("lime", "lime_cairo_show_glyphs") private static function lime_cairo_show_glyphs(handle:CFFIPointer, glyphs:hl.NativeArray<CairoGlyph>):Void {}
+
+	@:hlNative("lime", "lime_cairo_glyph_path") private static function lime_cairo_glyph_path(handle:CFFIPointer, glyphs:hl.NativeArray<CairoGlyph>):Void {}
 
 	@:hlNative("lime", "lime_cairo_show_page") private static function lime_cairo_show_page(handle:CFFIPointer):Void {}
 
