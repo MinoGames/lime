@@ -129,22 +129,6 @@ public class GameActivity extends SDLActivity {
 		Extension.mainView = mLayout;
 		Extension.packageName = getApplicationContext ().getPackageName ();
 
-		if (Build.VERSION.SDK_INT >= 16 && Build.VERSION.SDK_INT < 19) {
-
-			View decorView = getWindow ().getDecorView ();
-
-			decorView.setOnSystemUiVisibilityChangeListener (new View.OnSystemUiVisibilityChangeListener () {
-
-				@Override public void onSystemUiVisibilityChange (int visibility) {
-
-					updateSystemUI ();
-
-				}
-
-			});
-
-		}
-
 		if (extensions == null) {
 
 			extensions = new ArrayList<Extension> ();
@@ -254,8 +238,6 @@ public class GameActivity extends SDLActivity {
 
 		super.onResume ();
 
-		updateSystemUI ();
-
 		for (Extension extension : extensions) {
 
 			extension.onResume ();
@@ -294,8 +276,6 @@ public class GameActivity extends SDLActivity {
 	@Override protected void onStart () {
 
 		super.onStart ();
-
-		updateSystemUI ();
 
 		for (Extension extension : extensions) {
 
@@ -336,15 +316,6 @@ public class GameActivity extends SDLActivity {
 
 	}
 	::end::
-
-
-	@Override public void onWindowFocusChanged (boolean hasFocus) {
-
-		super.onWindowFocusChanged (hasFocus);
-
-		updateSystemUI ();
-
-	}
 
 
 	public static void openFile (String path) {
@@ -410,33 +381,6 @@ public class GameActivity extends SDLActivity {
 		});
 
 	}
-
-
-	public static void updateSystemUI () {
-
-		::if WIN_FULLSCREEN::::if (ANDROID_TARGET_SDK_VERSION >= 19)::
-		boolean hasBackKey = KeyCharacterMap.deviceHasKey (KeyEvent.KEYCODE_BACK);
-		boolean hasHomeKey = KeyCharacterMap.deviceHasKey (KeyEvent.KEYCODE_HOME);
-
-		View decorView = Extension.mainActivity.getWindow ().getDecorView ();
-
-		if (Build.VERSION.SDK_INT >= 19) {
-
-			decorView.setSystemUiVisibility (View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-
-		} else if (hasBackKey && hasHomeKey && Build.VERSION.SDK_INT >= 16) {
-
-			decorView.setSystemUiVisibility (View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LOW_PROFILE);
-
-		} else if (Build.VERSION.SDK_INT >= 15) {
-
-			decorView.setSystemUiVisibility (View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LOW_PROFILE);
-
-		}
-		::end::::end::
-
-	}
-
 
 	public static void vibrate (int period, int duration) {
 
