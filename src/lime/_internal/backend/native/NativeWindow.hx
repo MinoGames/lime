@@ -61,6 +61,7 @@ class NativeWindow
 		displayMode = new DisplayMode(0, 0, 0, 0);
 
 		var attributes = parent.__attributes;
+		trace('attributes: $attributes');
 		var contextAttributes = Reflect.hasField(attributes, "context") ? attributes.context : {};
 		var title = Reflect.hasField(attributes, "title") ? attributes.title : "Lime Application";
 		var flags = 0;
@@ -98,12 +99,17 @@ class NativeWindow
 
 		if (contextAttributes.colorDepth == 32) flags |= cast WindowFlags.WINDOW_FLAG_COLOR_DEPTH_32_BIT;
 		if (contextAttributes.depth) flags |= cast WindowFlags.WINDOW_FLAG_DEPTH_BUFFER;
-		if (contextAttributes.hardware) flags |= cast WindowFlags.WINDOW_FLAG_HARDWARE;
+		if (contextAttributes.hardware && Math.random() <= 2) {
+			flags |= cast WindowFlags.WINDOW_FLAG_HARDWARE;
+			trace('add flags WINDOW_FLAG_HARDWARE');
+		}
 		if (contextAttributes.stencil) flags |= cast WindowFlags.WINDOW_FLAG_STENCIL_BUFFER;
 		if (contextAttributes.vsync) flags |= cast WindowFlags.WINDOW_FLAG_VSYNC;
 
 		var width = Reflect.hasField(attributes, "width") ? attributes.width : #if desktop 800 #else 0 #end;
 		var height = Reflect.hasField(attributes, "height") ? attributes.height : #if desktop 600 #else 0 #end;
+
+		trace('contextAttributes: $contextAttributes -> flags: $flags');
 
 		#if (!macro && lime_cffi)
 		handle = NativeCFFI.lime_window_create(parent.application.__backend.handle, width, height, flags, title);
@@ -125,13 +131,16 @@ class NativeWindow
 
 		#if hl
 		var contextType = @:privateAccess String.fromUTF8(NativeCFFI.lime_window_get_context_type(handle));
+		trace('new NativeWindow() 0 contextType = $contextType');
 		#else
 		var contextType:String = NativeCFFI.lime_window_get_context_type(handle);
+		trace('new NativeWindow() 1 contextType = $contextType');
 		#end
 
 		switch (contextType)
 		{
 			case "opengl":
+				trace('new NativeWindow() calling new NativeOpenGLRenderContext()');
 				var gl = new NativeOpenGLRenderContext();
 
 				useHardware = true;
@@ -175,6 +184,8 @@ class NativeWindow
 		parent.context = context;
 
 		setFrameRate(Reflect.hasField(attributes, "frameRate") ? attributes.frameRate : 60);
+
+		trace('log: ${setTitle('ahaha')}');
 		#end
 	}
 

@@ -376,6 +376,7 @@ class NativeApplication
 					}
 
 				case RENDER_CONTEXT_LOST:
+					trace('handleRenderEvent: ${renderEventInfo.type}');
 					if (window.__backend.useHardware && window.context != null)
 					{
 						switch (window.context.type)
@@ -384,22 +385,28 @@ class NativeApplication
 								#if (lime_cffi && (lime_opengl || lime_opengles) && !display)
 								var gl = window.context.gl;
 								(gl:NativeOpenGLRenderContext).__contextLost();
-								if (GL.context == gl) GL.context = null;
+								if (GL.context == gl) {
+									GL.context = null;
+									trace('set GL.context = null');
+								}
 								#end
 
 							default:
 						}
 
+						trace('set window.context = null');
 						window.context = null;
 						window.onRenderContextLost.dispatch();
 					}
 
 				case RENDER_CONTEXT_RESTORED:
+					trace('handleRenderEvent: ${renderEventInfo.type}');
 					if (window.__backend.useHardware)
 					{
 						// GL.context = new OpenGLRenderContext ();
 						// window.context.gl = GL.context;
 
+						trace('window.onRenderContextRestored.dispatch');
 						window.onRenderContextRestored.dispatch(window.context);
 					}
 			}

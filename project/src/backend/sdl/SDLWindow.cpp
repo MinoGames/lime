@@ -45,11 +45,7 @@ namespace lime {
 
 		int sdlWindowFlags = 0;
 
-		#ifdef ANDROID
-		if (flags & WINDOW_FLAG_FULLSCREEN) sdlWindowFlags |= SDL_WINDOW_FULLSCREEN;
-		#else
 		if (flags & WINDOW_FLAG_FULLSCREEN) sdlWindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-		#endif
 		if (flags & WINDOW_FLAG_RESIZABLE) sdlWindowFlags |= SDL_WINDOW_RESIZABLE;
 		if (flags & WINDOW_FLAG_BORDERLESS) sdlWindowFlags |= SDL_WINDOW_BORDERLESS;
 		if (flags & WINDOW_FLAG_HIDDEN) sdlWindowFlags |= SDL_WINDOW_HIDDEN;
@@ -164,8 +160,9 @@ namespace lime {
 		}
 		#endif
 
+		log = "";
 		if (!sdlWindow) {
-
+			log += ", Could not create SDL window";
 			printf ("Could not create SDL window: %s.\n", SDL_GetError ());
 			return;
 
@@ -198,6 +195,9 @@ namespace lime {
 		#endif
 
 		int sdlRendererFlags = 0;
+		if (flags & WINDOW_FLAG_HARDWARE) {
+			log += ", flags has WINDOW_FLAG_HARDWARE";
+		}
 
 		if (flags & WINDOW_FLAG_HARDWARE) {
 
@@ -218,7 +218,14 @@ namespace lime {
 			// }
 
 			context = SDL_GL_CreateContext (sdlWindow);
+			// NOTE I KNOW IT HAPPENS HERE, context == null, but why?
 
+			if (context == 0) {
+				log += ", context == 0";
+				log += ", SDL_GetError (): " + std::string(SDL_GetError());
+			} else {
+				log += ", context != 0 (good)";
+			}
 			if (context && SDL_GL_MakeCurrent (sdlWindow, context) == 0) {
 
 				if (flags & WINDOW_FLAG_VSYNC) {
@@ -237,6 +244,7 @@ namespace lime {
 
 				int version = 0;
 				glGetIntegerv (GL_MAJOR_VERSION, &version);
+				log += "glGetIntegerv: " + version;
 
 				if (version == 0) {
 
@@ -249,6 +257,7 @@ namespace lime {
 				if (version < 2 && !strstr ((const char*)glGetString (GL_VERSION), "OpenGL ES")) {
 
 					SDL_GL_DeleteContext (context);
+					log += ", delete context 1";
 					context = 0;
 
 				}
@@ -266,6 +275,7 @@ namespace lime {
 
 			} else {
 
+				log += ", delete context 2";
 				SDL_GL_DeleteContext (context);
 				context = NULL;
 
@@ -274,7 +284,7 @@ namespace lime {
 		}
 
 		if (!context) {
-
+			log += ", can't create context so fallback to software";
 			sdlRendererFlags &= ~SDL_RENDERER_ACCELERATED;
 			sdlRendererFlags &= ~SDL_RENDERER_PRESENTVSYNC;
 
@@ -294,13 +304,6 @@ namespace lime {
 
 		}
 
-		#ifdef ANDROID
-		// TODO: Is this extra call needed?
-		if (flags & WINDOW_FLAG_FULLSCREEN)
-		{
-			SetFullscreen(true);
-		}
-		#endif
 	}
 
 
@@ -936,9 +939,7 @@ namespace lime {
 	bool SDLWindow::SetFullscreen (bool fullscreen) {
 
 		if (fullscreen) {
-			#ifdef ANDROID
-			SDL_SetWindowFullscreen (sdlWindow, SDL_WINDOW_FULLSCREEN);
-			#else
+
 			if (displayModeSet) {
 
 				SDL_SetWindowFullscreen (sdlWindow, SDL_WINDOW_FULLSCREEN);
@@ -948,7 +949,6 @@ namespace lime {
 				SDL_SetWindowFullscreen (sdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
 			}
-			#endif
 
 		} else {
 
@@ -1068,7 +1068,7 @@ namespace lime {
 
 		SDL_SetWindowTitle (sdlWindow, title);
 
-		return title;
+		return log.c_str();
 
 	}
 

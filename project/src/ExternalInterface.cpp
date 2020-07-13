@@ -3671,11 +3671,11 @@ namespace lime {
 
 			value _result = alloc_string (result);
 
-			if (result != title.c_str ()) {
+			// if (result != title.c_str ()) {
 
-				free ((char*) result);
+			// 	free ((char*) result);
 
-			}
+			// }
 
 			return _result;
 

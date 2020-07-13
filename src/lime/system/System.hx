@@ -484,6 +484,7 @@ class System
 							attributes.fullscreen = __parseBool(argValue);
 						case "hardware":
 							attributes.context.hardware = __parseBool(argValue);
+							trace('System parseBool hardware: "${argValue}" -> ${__parseBool}');
 						case "height":
 							attributes.height = Std.parseInt(argValue);
 						case "hidden":

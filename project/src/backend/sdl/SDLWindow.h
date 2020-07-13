@@ -64,6 +64,8 @@ namespace lime {
 			int contextHeight;
 			int contextWidth;
 
+			std::string log;
+
 	};
 
 

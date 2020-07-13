@@ -86,6 +86,7 @@ import ::APP_MAIN::;
 			#end
 		}
 
+		trcace('AppplicationMain will call app.createWindow() with attributes: ${attributes}');
 		app.createWindow(attributes);
 		::end::
 		#elseif !air

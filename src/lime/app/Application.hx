@@ -23,6 +23,7 @@ import lime.utils.Preloader;
 	that are relevant.
 **/
 @:access(lime.ui.Window)
+@:access(lime._internal.backend.native.NativeWindow)
 #if !lime_debug
 @:fileXml('tags="haxe,release"')
 @:noDebug
@@ -130,7 +131,7 @@ class Application extends Module
 		Creates a new Window and adds it to the Application
 		@param	window	A Window object to add
 	**/
-	public function createWindow(attributes:WindowAttributes):Window
+	public function createWindow(attributes:WindowAttributes,retriedCount:Int=0):Window
 	{
 		var window = __createWindow(attributes);
 		__addWindow(window);

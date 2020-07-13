@@ -190,6 +190,7 @@ public class GameActivity extends SDLActivity {
 
 
 	@Override protected void onPause () {
+		Log.i("DEBUG GameActivity", "onPause");
 
 		super.onPause ();
 
@@ -235,6 +236,7 @@ public class GameActivity extends SDLActivity {
 
 
 	@Override protected void onResume () {
+		Log.i("DEBUG GameActivity", "onResume");
 
 		super.onResume ();
 

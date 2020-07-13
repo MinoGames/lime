@@ -149,6 +149,7 @@ class Window
 		__title = "";
 		id = -1;
 
+		trace('new Window create new WindowBackend (aka NativeWindow) with attributes: ${attributes}');
 		__backend = new WindowBackend(this);
 
 		#if windows
