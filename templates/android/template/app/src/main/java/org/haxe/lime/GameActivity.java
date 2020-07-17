@@ -201,6 +201,12 @@ public class GameActivity extends SDLActivity {
 
 	}
 
+	@Override public void onAttachedToWindow() {
+		super.onAttachedToWindow();
+		for(Extension extension : extensions) {
+			extension.onAttachedToWindow();
+		}
+	}
 
 	::if (ANDROID_TARGET_SDK_VERSION >= 23)::
 	@Override public void onRequestPermissionsResult (int requestCode, String permissions[], int[] grantResults) {
