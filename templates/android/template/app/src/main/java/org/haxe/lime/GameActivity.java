@@ -31,6 +31,8 @@ public class GameActivity extends SDLActivity {
 	private static AssetManager assetManager;
 	private static List<Extension> extensions;
 	private static DisplayMetrics metrics;
+	private static Uri intentData;
+	private static String[] intentParams = new String[3];
 
 	public Handler handler;
 
@@ -147,6 +149,28 @@ public class GameActivity extends SDLActivity {
 
 		}
 
+		// Parse intent data and pass to game
+		final Intent intent = getIntent();
+		intentData = intent.getData();
+		if (intentData != null) {
+			String param1 = intentData.getQueryParameter("param1");
+			String param2 = intentData.getQueryParameter("param2");
+			String param3 = intentData.getQueryParameter("param3");
+			intentParams[0] = param1 == null ? "" : param1;
+			intentParams[1] = param2 == null ? "" : param2;
+			intentParams[2] = param3 == null ? "" : param3;
+		}
+
+	}
+
+
+	public static boolean hasIntentData() {
+		return intentData != null;
+	}
+
+
+	public static String[] getIntentParams() {
+		return intentParams;
 	}
 
 
