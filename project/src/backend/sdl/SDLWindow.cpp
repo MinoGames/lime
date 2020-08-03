@@ -45,11 +45,7 @@ namespace lime {
 
 		int sdlWindowFlags = 0;
 
-		#ifdef ANDROID
-		if (flags & WINDOW_FLAG_FULLSCREEN) sdlWindowFlags |= SDL_WINDOW_FULLSCREEN;
-		#else
 		if (flags & WINDOW_FLAG_FULLSCREEN) sdlWindowFlags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
-		#endif
 		if (flags & WINDOW_FLAG_RESIZABLE) sdlWindowFlags |= SDL_WINDOW_RESIZABLE;
 		if (flags & WINDOW_FLAG_BORDERLESS) sdlWindowFlags |= SDL_WINDOW_BORDERLESS;
 		if (flags & WINDOW_FLAG_HIDDEN) sdlWindowFlags |= SDL_WINDOW_HIDDEN;
@@ -167,7 +163,6 @@ namespace lime {
 		if (!sdlWindow) {
 
 			printf ("Could not create SDL window: %s.\n", SDL_GetError ());
-			return;
 
 		}
 
@@ -294,13 +289,6 @@ namespace lime {
 
 		}
 
-		#ifdef ANDROID
-		// TODO: Is this extra call needed?
-		if (flags & WINDOW_FLAG_FULLSCREEN)
-		{
-			SetFullscreen(true);
-		}
-		#endif
 	}
 
 
@@ -936,9 +924,7 @@ namespace lime {
 	bool SDLWindow::SetFullscreen (bool fullscreen) {
 
 		if (fullscreen) {
-			#ifdef ANDROID
-			SDL_SetWindowFullscreen (sdlWindow, SDL_WINDOW_FULLSCREEN);
-			#else
+
 			if (displayModeSet) {
 
 				SDL_SetWindowFullscreen (sdlWindow, SDL_WINDOW_FULLSCREEN);
@@ -948,7 +934,6 @@ namespace lime {
 				SDL_SetWindowFullscreen (sdlWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 
 			}
-			#endif
 
 		} else {
 
