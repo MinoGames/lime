@@ -549,12 +549,12 @@ class Application extends Module
 			__windowByID.remove(window.id);
 			window.close();
 
-			if (__windows.length == 0)
-			{
+			//if (__windows.length == 0)
+			//{
 				#if !lime_doc_gen
 				System.exit(0);
 				#end
-			}
+			//}
 		}
 	}
 
