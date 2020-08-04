@@ -22,6 +22,7 @@ import lime.system.System;
 import lime.ui.MouseCursor;
 import lime.ui.Window;
 import lime.utils.UInt8Array;
+import haxe.Timer;
 
 #if !lime_debug
 @:fileXml('tags="haxe,release"')
@@ -104,6 +105,8 @@ class NativeWindow
 
 		var width = Reflect.hasField(attributes, "width") ? attributes.width : #if desktop 800 #else 0 #end;
 		var height = Reflect.hasField(attributes, "height") ? attributes.height : #if desktop 600 #else 0 #end;
+
+        Sys.sleep(0.5);
 
 		#if (!macro && lime_cffi)
 		handle = NativeCFFI.lime_window_create(parent.application.__backend.handle, width, height, flags, title);
