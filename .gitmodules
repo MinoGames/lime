@@ -55,6 +55,3 @@
 [submodule "project/lib/mojoal"]
 	path = project/lib/mojoal
 	url = https://github.com/native-toolkit/mojoal
-[submodule "project/lib/sdl"]
-	path = project/lib/sdl
-	url = https://github.com/native-toolkit/sdl
