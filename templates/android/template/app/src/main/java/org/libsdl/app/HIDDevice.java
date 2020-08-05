@@ -1,4 +1,5 @@
 package org.libsdl.app;
+import android.hardware.usb.UsbDevice;
 
 interface HIDDevice
 {
@@ -9,6 +10,7 @@ interface HIDDevice
     public int getVersion();
     public String getManufacturerName();
     public String getProductName();
+    public UsbDevice getDevice();
     public boolean open();
     public int sendFeatureReport(byte[] report);
     public int sendOutputReport(byte[] report);
