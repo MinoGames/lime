@@ -139,7 +139,8 @@ class IOSPlatform extends PlatformTarget
 		{
 			if (!StringTools.endsWith(dependency.name, ".framework")
 				&& !StringTools.endsWith(dependency.name, ".tbd")
-				&& !StringTools.endsWith(dependency.path, ".framework"))
+				&& !StringTools.endsWith(dependency.path, ".framework")
+				&& !StringTools.endsWith(dependency.path, ".xcframework"))
 			{
 				if (dependency.path != "")
 				{
@@ -319,6 +320,12 @@ class IOSPlatform extends PlatformTarget
 				name = Path.withoutDirectory(dependency.path);
 				path = Path.tryFullPath(dependency.path);
 				fileType = "wrapper.framework";
+			}
+			else if (Path.extension(dependency.path) == "xcframework")
+			{
+				name = Path.withoutDirectory(dependency.path);
+				path = Path.tryFullPath(dependency.path);
+				fileType = "wrapper.xcframework";
 			}
 
 			if (name != null)
