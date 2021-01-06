@@ -1176,7 +1176,19 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         for (int i = 0; i < ids.length; ++i) {
             InputDevice device = InputDevice.getDevice(ids[i]);
             if (device != null && (device.getSources() & InputDevice.SOURCE_TOUCHSCREEN) != 0) {
-                nativeAddTouch(device.getId(), device.getName());
+
+                /**
+                * Prevent id to be -1, since it's used in SDL internal for synthetic events
+                * Appears when using Android emulator, eg:
+                *  adb shell input mouse tap 100 100
+                *  adb shell input touchscreen tap 100 100
+                */
+                int touchDevId = device.getId();
+                if (touchDevId < 0) {
+                    touchDevId -= 1;
+                }
+
+                nativeAddTouch(touchDevId, device.getName());
             }
         }
     }
@@ -1896,13 +1908,23 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         /* Ref: http://developer.android.com/training/gestures/multi.html */
-        final int touchDevId = event.getDeviceId();
+        int touchDevId = event.getDeviceId();
         final int pointerCount = event.getPointerCount();
         int action = event.getActionMasked();
         int pointerFingerId;
         int mouseButton;
         int i = -1;
         float x,y,p;
+
+        /**
+         * Prevent id to be -1, since it's used in SDL internal for synthetic events
+         * Appears when using Android emulator, eg:
+         *  adb shell input mouse tap 100 100
+         *  adb shell input touchscreen tap 100 100
+         */
+        if (touchDevId < 0) {
+            touchDevId -= 1;
+        }
 
         // 12290 = Samsung DeX mode desktop mouse
         // 12290 = 0x3002 = 0x2002 | 0x1002 = SOURCE_MOUSE | SOURCE_TOUCHSCREEN
