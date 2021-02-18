@@ -360,17 +360,16 @@ class System
 				var company = "MyCompany";
 				var file = "MyApplication";
 
-				if (Application.current != null)
-				{
-					if (Application.current.meta.exists("company"))
-					{
-						company = Application.current.meta.get("company");
-					}
+				if (Application.current == null) throw "Cannot access ApplicationStorage before Application is available";
 
-					if (Application.current.meta.exists("file"))
-					{
-						file = Application.current.meta.get("file");
-					}
+				if (Application.current.meta.exists("company"))
+				{
+					company = Application.current.meta.get("company");
+				}
+
+				if (Application.current.meta.exists("file"))
+				{
+					file = Application.current.meta.get("file");
 				}
 
 				#if hl
