@@ -564,6 +564,11 @@ class HIDDeviceBLESteamController extends BluetoothGattCallback implements HIDDe
         return "Steam Controller";
     }
 
+	@Override
+    public UsbDevice getDevice() {
+		return null;
+	}
+
     @Override
     public UsbDevice getDevice() {
 		return null;

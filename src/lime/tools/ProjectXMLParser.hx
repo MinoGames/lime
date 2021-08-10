@@ -392,7 +392,8 @@ class ProjectXMLParser extends HXProject
 		return segments.join("");
 	}
 
-	public static function fromFile(path:String, defines:Map<String, Dynamic> = null, includePaths:Array<String> = null, useExtensionPath:Bool = false):ProjectXMLParser
+	public static function fromFile(path:String, defines:Map<String, Dynamic> = null, includePaths:Array<String> = null,
+			useExtensionPath:Bool = false):ProjectXMLParser
 	{
 		if (path == null) return null;
 
@@ -761,9 +762,8 @@ class ProjectXMLParser extends HXProject
 				if (manifest != null)
 				{
 					library = targetPath;
-					manifest.rootPath = targetPath;
 
-					var asset = new Asset("", Path.combine(targetPath, "library.json"), AssetType.MANIFEST);
+					var asset = new Asset(jsonPath, Path.combine(targetPath, "library.json"), AssetType.MANIFEST);
 					asset.id = "libraries/" + library + ".json";
 					asset.library = library;
 					asset.data = manifest.serialize();
@@ -1222,8 +1222,8 @@ class ProjectXMLParser extends HXProject
 
 						if (version != "" && defines.exists(name) && !haxelib.versionMatches(defines.get(name)))
 						{
-							Log.warn("Ignoring requested haxelib \"" + name + "\" version \"" + version + "\" (version \"" + defines
-								.get(name) + "\" was already included)");
+							Log.warn("Ignoring requested haxelib \"" + name + "\" version \"" + version + "\" (version \"" + defines.get(name)
+								+ "\" was already included)");
 							continue;
 						}
 
@@ -1365,6 +1365,84 @@ class ProjectXMLParser extends HXProject
 						}
 
 						splashScreens.push(splashScreen);
+
+					case "launchStoryboard":
+						if (launchStoryboard == null)
+						{
+							launchStoryboard = new LaunchStoryboard();
+						}
+
+						if (element.has.path)
+						{
+							launchStoryboard.path = Path.combine(extensionPath, substitute(element.att.path));
+						}
+						else if (element.has.name)
+						{
+							launchStoryboard.path = Path.combine(extensionPath, substitute(element.att.name));
+						}
+						else if (element.has.template)
+						{
+							launchStoryboard.template = substitute(element.att.template);
+							launchStoryboard.templateContext = {};
+
+							for (attr in element.x.attributes())
+							{
+								if (attr == "assetsPath") continue;
+
+								var valueType = "String";
+								var valueName = attr;
+
+								if (valueName.indexOf(":") != -1)
+								{
+									valueType = valueName.substring(valueName.lastIndexOf(":") + 1);
+									valueName = valueName.substring(0, valueName.lastIndexOf(":"));
+								}
+
+								var stringValue = element.x.get(attr);
+								var value:Dynamic;
+
+								switch (valueType)
+								{
+									case "Int":
+										value = Std.parseInt(stringValue);
+									case "RGB":
+										var rgb:lime.math.ARGB = Std.parseInt(stringValue);
+										value = {r: rgb.r / 255, g: rgb.g / 255, b: rgb.b / 255};
+									case "String":
+										value = stringValue;
+									default:
+										Log.warn("Ignoring unknown value type \"" + valueType + "\" in storyboard configuration.");
+										value = "";
+								}
+
+								Reflect.setField(launchStoryboard.templateContext, valueName, value);
+							}
+						}
+
+						if (element.has.assetsPath)
+						{
+							launchStoryboard.assetsPath = Path.combine(extensionPath, substitute(element.att.assetsPath));
+						}
+
+						for (childElement in element.elements)
+						{
+							var isValid = isValidElement(childElement, "");
+
+							if (isValid)
+							{
+								switch (childElement.name)
+								{
+									case "imageset":
+										var name = substitute(childElement.att.name);
+										var imageset = new LaunchStoryboard.ImageSet(name);
+
+										if (childElement.has.width) imageset.width = Std.parseInt(substitute(childElement.att.width));
+										if (childElement.has.height) imageset.height = Std.parseInt(substitute(childElement.att.height));
+
+										launchStoryboard.assets.push(imageset);
+								}
+							}
+						}
 
 					case "icon":
 						var path = "";

@@ -209,7 +209,7 @@ class HIDDeviceUSB implements HIDDevice {
             UsbConstants.USB_TYPE_CLASS | 0x01 /*RECIPIENT_INTERFACE*/ | UsbConstants.USB_DIR_IN,
             0x01/*HID get_report*/,
             (3/*HID feature*/ << 8) | report_number,
-            0,
+            mInterface,
             report, offset, length,
             1000/*timeout millis*/);
 

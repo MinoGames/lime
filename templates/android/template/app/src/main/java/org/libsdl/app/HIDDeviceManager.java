@@ -121,7 +121,7 @@ public class HIDDeviceManager {
                         // If our context is an activity, exit rather than crashing when we can't
                         // call our native functions.
                         Activity activity = (Activity)context;
-        
+
                         activity.finish();
                     }
                     catch (ClassCastException cce) {
@@ -133,7 +133,7 @@ public class HIDDeviceManager {
 
             return;
         }
-        
+
         HIDDeviceRegisterCallback();
 
         mSharedPreferences = mContext.getSharedPreferences("hidapi", Context.MODE_PRIVATE);
@@ -199,7 +199,7 @@ public class HIDDeviceManager {
                 Log.i(TAG,"  Interface protocol: " + mUsbInterface.getInterfaceProtocol());
                 Log.i(TAG,"  Endpoint count: " + mUsbInterface.getEndpointCount());
 
-                // Get endpoint details 
+                // Get endpoint details
                 for (int epi = 0; epi < mUsbInterface.getEndpointCount(); epi++)
                 {
                     UsbEndpoint mEndpoint = mUsbInterface.getEndpoint(epi);
@@ -266,6 +266,7 @@ public class HIDDeviceManager {
             0x07ff, // Mad Catz
             0x0e6f, // PDP
             0x0f0d, // Hori
+            0x1038, // SteelSeries
             0x11c9, // Nacon
             0x12ab, // Unknown
             0x1430, // RedOctane
@@ -302,6 +303,7 @@ public class HIDDeviceManager {
             0x0f0d, // Hori
             0x1532, // Razer Wildcat
             0x24c6, // PowerA
+            0x2e24, // Hyperkin
         };
 
         if (usbInterface.getId() == 0 &&
@@ -531,7 +533,7 @@ public class HIDDeviceManager {
             for (HIDDevice device : mDevicesById.values()) {
                 device.setFrozen(frozen);
             }
-        }        
+        }
     }
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -584,7 +586,6 @@ public class HIDDeviceManager {
 
     public int sendOutputReport(int deviceID, byte[] report) {
         try {
-            //Log.v(TAG, "sendFeatureReport deviceID=" + deviceID + " length=" + report.length);
             HIDDevice device;
             device = getDevice(deviceID);
             if (device == null) {
@@ -601,7 +602,7 @@ public class HIDDeviceManager {
 
     public int sendFeatureReport(int deviceID, byte[] report) {
         try {
-            Log.v(TAG, "sendFeatureReport deviceID=" + deviceID + " length=" + report.length);
+            //Log.v(TAG, "sendFeatureReport deviceID=" + deviceID + " length=" + report.length);
             HIDDevice device;
             device = getDevice(deviceID);
             if (device == null) {
@@ -618,7 +619,7 @@ public class HIDDeviceManager {
 
     public boolean getFeatureReport(int deviceID, byte[] report) {
         try {
-            Log.v(TAG, "getFeatureReport deviceID=" + deviceID);
+            //Log.v(TAG, "getFeatureReport deviceID=" + deviceID);
             HIDDevice device;
             device = getDevice(deviceID);
             if (device == null) {

@@ -59,13 +59,11 @@ public class GameActivity extends SDLActivity {
 
 	}
 
+	// @Override protected String getMainSharedObject () {
 
-	/*@Override protected String getMainSharedObject () {
+	// 	return "libApplicationMain.so";
 
-        return "libApplicationMain.so";
-
-	}*/
-
+	// }
 
 	@Override protected String getMainFunction () {
 
@@ -104,7 +102,6 @@ public class GameActivity extends SDLActivity {
 		}
 
 		//super.onBackPressed ();
-
 	}
 
 
@@ -141,10 +138,9 @@ public class GameActivity extends SDLActivity {
 
 			try {
 				extension.onCreate (state);
-		   } catch (Throwable e) {
+			} catch (Throwable e) {
 				// Meh
-		   }
-
+			}
 		}
 
 	}
@@ -207,6 +203,7 @@ public class GameActivity extends SDLActivity {
 			extension.onAttachedToWindow();
 		}
 	}
+
 
 	::if (ANDROID_TARGET_SDK_VERSION >= 23)::
 	@Override public void onRequestPermissionsResult (int requestCode, String permissions[], int[] grantResults) {

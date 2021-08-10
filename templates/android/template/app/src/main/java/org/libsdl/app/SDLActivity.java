@@ -305,6 +305,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     protected void onPause() {
         Log.v(TAG, "onPause()");
         super.onPause();
+
         if (mHIDDeviceManager != null) {
             mHIDDeviceManager.setFrozen(true);
         }
@@ -317,6 +318,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     protected void onResume() {
         Log.v(TAG, "onResume()");
         super.onResume();
+
         if (mHIDDeviceManager != null) {
             mHIDDeviceManager.setFrozen(false);
         }
@@ -638,6 +640,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
                     imm.hideSoftInputFromWindow(mTextEdit.getWindowToken(), 0);
 
                     mScreenKeyboardShown = false;
+
                     mSurface.requestFocus();
                 }
                 break;
@@ -821,6 +824,7 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
         int orientation_landscape = -1;
         int orientation_portrait = -1;
 
+        /* If set, hint "explicitly controls which UI orientations are allowed". */
         if (hint.contains("LandscapeRight") && hint.contains("LandscapeLeft")) {
             orientation_landscape = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
         } else if (hint.contains("LandscapeRight")) {
@@ -892,6 +896,21 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
     /**
      * This method is called by SDL using JNI.
      */
+    public static void minimizeWindow() {
+
+        if (mSingleton == null) {
+            return;
+        }
+
+        Intent startMain = new Intent(Intent.ACTION_MAIN);
+        startMain.addCategory(Intent.CATEGORY_HOME);
+        startMain.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mSingleton.startActivity(startMain);
+    }
+
+    /**
+     * This method is called by SDL using JNI.
+     */
     public static boolean shouldMinimizeOnFocusLoss() {
 /*
         if (Build.VERSION.SDK_INT >= 24) {
@@ -901,10 +920,16 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             if (mSingleton.isInMultiWindowMode()) {
                 return false;
             }
+
+            if (mSingleton.isInMultiWindowMode()) {
+                return false;
+            }
+
             if (mSingleton.isInPictureInPictureMode()) {
                 return false;
             }
         }
+
         return true;
 */
         return false;
@@ -1103,6 +1128,14 @@ public class SDLActivity extends Activity implements View.OnSystemUiVisibilityCh
             this.y = y;
             this.w = w;
             this.h = h;
+
+            /* Minimum size of 1 pixel, so it takes focus. */
+            if (this.w <= 0) {
+                this.w = 1;
+            }
+            if (this.h + HEIGHT_PADDING <= 0) {
+                this.h = 1 - HEIGHT_PADDING;
+            }
         }
 
         @Override
@@ -1803,6 +1836,8 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         SDLActivity.nativeSetScreenResolution(width, height, nDeviceWidth, nDeviceHeight, sdlFormat, mDisplay.getRefreshRate());
         SDLActivity.onNativeResize();
 
+        // Prevent a screen distortion glitch,
+        // for instance when the device is in Landscape and a Portrait App is resumed.
         boolean skip = false;
         int requestedOrientation = SDLActivity.mSingleton.getRequestedOrientation();
 
@@ -1832,6 +1867,16 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
            }
         }
 
+        // Don't skip in MultiWindow.
+        if (skip) {
+            if (Build.VERSION.SDK_INT >= 24) {
+                if (SDLActivity.mSingleton.isInMultiWindowMode()) {
+                    Log.v("SDL", "Don't skip in Multi-Window");
+                    skip = false;
+                }
+            }
+        }
+
         if (skip) {
            Log.v("SDL", "Skip .. Surface is not ready.");
            mIsSurfaceReady = false;
@@ -1851,6 +1896,10 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
     // Key events
     @Override
     public boolean onKey(View  v, int keyCode, KeyEvent event) {
+
+        int deviceId = event.getDeviceId();
+        int source = event.getSource();
+
         // Dispatch the different events depending on where they come from
         // Some SOURCE_JOYSTICK, SOURCE_DPAD or SOURCE_GAMEPAD are also SOURCE_KEYBOARD
         // So, we try to process them as JOYSTICK/DPAD/GAMEPAD events first, if that fails we try them as KEYBOARD
@@ -1858,20 +1907,27 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
         // Furthermore, it's possible a game controller has SOURCE_KEYBOARD and
         // SOURCE_JOYSTICK, while its key events arrive from the keyboard source
         // So, retrieve the device itself and check all of its sources
-        if (SDLControllerManager.isDeviceSDLJoystick(event.getDeviceId())) {
+        if (SDLControllerManager.isDeviceSDLJoystick(deviceId)) {
             // Note that we process events with specific key codes here
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                if (SDLControllerManager.onNativePadDown(event.getDeviceId(), keyCode) == 0) {
+                if (SDLControllerManager.onNativePadDown(deviceId, keyCode) == 0) {
                     return true;
                 }
             } else if (event.getAction() == KeyEvent.ACTION_UP) {
-                if (SDLControllerManager.onNativePadUp(event.getDeviceId(), keyCode) == 0) {
+                if (SDLControllerManager.onNativePadUp(deviceId, keyCode) == 0) {
                     return true;
                 }
             }
         }
 
-        if ((event.getSource() & InputDevice.SOURCE_KEYBOARD) != 0) {
+        if (source == InputDevice.SOURCE_UNKNOWN) {
+            InputDevice device = InputDevice.getDevice(deviceId);
+            if (device != null) {
+                source = device.getSources();
+            }
+        }
+
+        if ((source & InputDevice.SOURCE_KEYBOARD) != 0) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 //Log.v("SDL", "key down: " + keyCode);
                 if (SDLActivity.isTextInputEvent(event)) {
@@ -1887,7 +1943,7 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
             }
         }
 
-        if ((event.getSource() & InputDevice.SOURCE_MOUSE) != 0) {
+        if ((source & InputDevice.SOURCE_MOUSE) != 0) {
             // on some devices key events are sent for mouse BUTTON_BACK/FORWARD presses
             // they are ignored here because sending them as mouse input to SDL is messy
             if ((keyCode == KeyEvent.KEYCODE_BACK) || (keyCode == KeyEvent.KEYCODE_FORWARD)) {
@@ -2003,10 +2059,6 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
             }
         }
 
-        //try {
-        //    Thread.sleep((Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) ? 16 : 1);
-        //} catch (InterruptedException e) {}
-
         return true;
    }
 
@@ -2049,8 +2101,8 @@ class SDLSurface extends SurfaceView implements SurfaceHolder.Callback,
                     newOrientation = SDLActivity.SDL_ORIENTATION_LANDSCAPE_FLIPPED;
                     break;
                 case Surface.ROTATION_180:
-                    x = -event.values[1];
-                    y = -event.values[0];
+                    x = -event.values[0];
+                    y = -event.values[1];
                     newOrientation = SDLActivity.SDL_ORIENTATION_PORTRAIT_FLIPPED;
                     break;
                 default:
@@ -2205,14 +2257,8 @@ class SDLInputConnection extends BaseInputConnection {
          */
 
         if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            String imeHide = SDLActivity.nativeGetHint("SDL_RETURN_KEY_HIDES_IME");
-            if ((imeHide != null) && imeHide.equals("1")) {
-                Context c = SDL.getContext();
-                if (c instanceof SDLActivity) {
-                    SDLActivity activity = (SDLActivity)c;
-                    activity.sendCommand(SDLActivity.COMMAND_TEXTEDIT_HIDE, null);
-                    return true;
-                }
+            if (SDLActivity.onNativeSoftReturnKey()) {
+                return true;
             }
         }
 
@@ -2225,6 +2271,11 @@ class SDLInputConnection extends BaseInputConnection {
 
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
+            if (c == '\n') {
+                if (SDLActivity.onNativeSoftReturnKey()) {
+                    return true;
+                }
+            }
             nativeGenerateScancodeForUnichar(c);
         }
 
