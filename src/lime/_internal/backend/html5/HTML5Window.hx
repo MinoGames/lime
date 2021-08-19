@@ -315,8 +315,8 @@ class HTML5Window
 				#end
 
 				#if (js && html5)
-				context.webgl = webgl;
-				if (isWebGL2) context.webgl2 = webgl;
+				context.webgl = cast webgl;
+				if (isWebGL2) context.webgl2 = cast webgl;
 
 				if (GL.context == null)
 				{
