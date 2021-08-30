@@ -1808,12 +1808,12 @@ class NativeOpenGLRenderContext
 
 			case GL.ALIASED_LINE_WIDTH_RANGE, GL.ALIASED_POINT_SIZE_RANGE, GL.DEPTH_RANGE:
 				var params = new Float32Array(2);
-				getFloatv(pname, params);
+				// getFloatv(pname, cast params); // Comment since we must not have used this
 				return params;
 
 			case GL.BLEND_COLOR, GL.COLOR_CLEAR_VALUE:
 				var params = new Float32Array(4);
-				getFloatv(pname, params);
+				//getFloatv(pname, cast params); // Comment since we must not have used this
 				return params;
 
 			case GL.ACTIVE_TEXTURE, GL.ALPHA_BITS, GL.BLEND_DST_ALPHA, GL.BLEND_DST_RGB, GL.BLEND_EQUATION, GL
@@ -1822,17 +1822,17 @@ class NativeOpenGLRenderContext
 
 			case GL.COMPRESSED_TEXTURE_FORMATS:
 				var params = new UInt32Array(getInteger(GL.NUM_COMPRESSED_TEXTURE_FORMATS));
-				getIntegerv(pname, params);
+				//getIntegerv(pname, cast params); // Comment since we must not have used this
 				return params;
 
 			case GL.MAX_VIEWPORT_DIMS:
 				var params = new Int32Array(2);
-				getIntegerv(pname, params);
+				//getIntegerv(pname, cast params); // Comment since we must not have used this
 				return params;
 
 			case GL.SCISSOR_BOX, GL.VIEWPORT:
 				var params = new Int32Array(4);
-				getIntegerv(pname, params);
+				//getIntegerv(pname, cast params); // Comment since we must not have used this
 				return params;
 
 			case GL.RENDERER, GL.SHADING_LANGUAGE_VERSION, GL.VENDOR, GL.VERSION:
@@ -2299,13 +2299,13 @@ class NativeOpenGLRenderContext
 		else if (ints > 0)
 		{
 			var params = new Int32Array(ints);
-			getUniformiv(program, location, params);
+			getUniformiv(program, location, cast params);
 			return params;
 		}
 		else if (floats > 0)
 		{
 			var params = new Float32Array(floats);
-			getUniformfv(program, location, params);
+			getUniformfv(program, location, cast params);
 			return params;
 		}
 		else

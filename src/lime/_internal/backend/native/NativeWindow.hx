@@ -140,20 +140,20 @@ class NativeWindow
 				context.gl = gl;
 				#end
 
-				context.gles2 = gl;
-				context.webgl = gl;
+				context.gles2 = cast gl;
+				context.webgl = cast gl;
 				context.type = gl.type;
 				context.version = Std.string(gl.version);
 
 				if (gl.type == OPENGLES && gl.version >= 3)
 				{
-					context.gles3 = gl;
-					context.webgl2 = gl;
+					context.gles3 = cast gl;
+					context.webgl2 = cast gl;
 				}
 
 				if (GL.context == null)
 				{
-					GL.context = gl;
+					GL.context = cast gl;
 				}
 
 			default:

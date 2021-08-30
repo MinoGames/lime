@@ -50,19 +50,19 @@ class ImageDataUtil
 
 		var sourceOffset:Int;
 
-		var sourcePixel:RGBA;
-		var mapPixel:RGBA;
-		var targetPixel:RGBA;
+		var sourcePixel:RGBA = 0;
+		var mapPixel:RGBA = 0;
+		var targetPixel:RGBA = 0;
 
 		var mapPixelX:Float;
 		var mapPixelY:Float;
 		var mapPixelA:Float;
 
 		// for bilinear smoothing
-		var s1:RGBA;
-		var s2:RGBA;
-		var s3:RGBA;
-		var s4:RGBA;
+		var s1:RGBA = 0;
+		var s2:RGBA = 0;
+		var s3:RGBA = 0;
+		var s4:RGBA = 0;
 
 		var mPointXFloor:Int;
 		var mPointYFloor:Int;
@@ -180,7 +180,7 @@ class ImageDataUtil
 			var greenTable = colorMatrix.getGreenTable();
 			var blueTable = colorMatrix.getBlueTable();
 
-			var row, offset, pixel:RGBA;
+			var row, offset, pixel:RGBA = 0;
 
 			for (y in 0...dataView.height)
 			{
@@ -238,7 +238,7 @@ class ImageDataUtil
 			var srcPremultiplied = sourceImage.buffer.premultiplied;
 			var destPremultiplied = image.buffer.premultiplied;
 
-			var srcPosition, destPosition, srcPixel:RGBA, destPixel:RGBA, value = 0;
+			var srcPosition, destPosition, srcPixel:RGBA = 0, destPixel:RGBA = 0, value = 0;
 
 			for (y in 0...destView.height)
 			{
@@ -325,7 +325,7 @@ class ImageDataUtil
 
 				var sourcePosition, destPosition;
 				var sourceAlpha, destAlpha, oneMinusSourceAlpha, blendAlpha;
-				var sourcePixel:RGBA, destPixel:RGBA;
+				var sourcePixel:RGBA = 0, destPixel:RGBA = 0;
 
 				var sourcePremultiplied = sourceImage.buffer.premultiplied;
 				var destPremultiplied = image.buffer.premultiplied;
@@ -420,7 +420,7 @@ class ImageDataUtil
 
 					var alphaData = alphaImage.buffer.data;
 					var alphaFormat = alphaImage.buffer.format;
-					var alphaPosition, alphaPixel:RGBA;
+					var alphaPosition, alphaPixel:RGBA = 0;
 
 					var alphaView = new ImageDataView(alphaImage, new Rectangle(alphaPoint.x, alphaPoint.y, alphaImage.width, alphaImage.height));
 
@@ -500,7 +500,7 @@ class ImageDataUtil
 
 	public static function fillRect(image:Image, rect:Rectangle, color:Int, format:PixelFormat):Void
 	{
-		var fillColor:RGBA;
+		var fillColor:RGBA = 0;
 
 		switch (format)
 		{
@@ -566,7 +566,7 @@ class ImageDataUtil
 
 			var fillColor:RGBA = color;
 
-			var hitColor:RGBA;
+			var hitColor:RGBA = 0;
 			hitColor.readUInt8(data, ((y + image.offsetY) * (image.buffer.width * 4)) + ((x + image.offsetX) * 4), format, premultiplied);
 
 			if (!image.transparent)
@@ -591,7 +591,7 @@ class ImageDataUtil
 			queue.push(x);
 			queue.push(y);
 
-			var curPointX, curPointY, nextPointX, nextPointY, nextPointOffset, readColor:RGBA;
+			var curPointX, curPointY, nextPointX, nextPointY, nextPointOffset, readColor:RGBA = 0;
 
 			while (queue.length > 0)
 			{
@@ -799,7 +799,7 @@ class ImageDataUtil
 
 	public static function getPixel(image:Image, x:Int, y:Int, format:PixelFormat):Int
 	{
-		var pixel:RGBA;
+		var pixel:RGBA = 0;
 
 		pixel.readUInt8(image.buffer.data, (4 * (y + image.offsetY) * image.buffer.width + (x + image.offsetX) * 4), image.buffer.format,
 			image.buffer.premultiplied);
@@ -818,7 +818,7 @@ class ImageDataUtil
 
 	public static function getPixel32(image:Image, x:Int, y:Int, format:PixelFormat):Int
 	{
-		var pixel:RGBA;
+		var pixel:RGBA = 0;
 
 		pixel.readUInt8(image.buffer.data, (4 * (y + image.offsetY) * image.buffer.width + (x + image.offsetX) * 4), image.buffer.format,
 			image.buffer.premultiplied);
@@ -851,7 +851,7 @@ class ImageDataUtil
 			var premultiplied = image.buffer.premultiplied;
 
 			var dataView = new ImageDataView(image, rect);
-			var position, argb:ARGB, bgra:BGRA, pixel:RGBA;
+			var position, argb:ARGB = 0, bgra:BGRA = 0, pixel:RGBA = 0;
 			var destPosition = 0;
 
 			for (y in 0...dataView.height)
@@ -907,7 +907,7 @@ class ImageDataUtil
 			var sourcePremultiplied = sourceImage.buffer.premultiplied;
 			var destPremultiplied = image.buffer.premultiplied;
 
-			var sourcePosition, destPosition, sourcePixel:RGBA, destPixel:RGBA;
+			var sourcePosition, destPosition, sourcePixel:RGBA = 0, destPixel:RGBA = 0;
 
 			for (y in 0...destView.height)
 			{
@@ -948,7 +948,7 @@ class ImageDataUtil
 		{
 			var format = image.buffer.format;
 			var length = Std.int(data.length / 4);
-			var pixel:RGBA;
+			var pixel:RGBA = 0;
 
 			for (i in 0...length)
 			{
@@ -1320,7 +1320,7 @@ class ImageDataUtil
 			var srcPremultiplied = sourceImage.buffer.premultiplied;
 			var destPremultiplied = image.buffer.premultiplied;
 
-			var srcPosition, destPosition, srcPixel:RGBA, destPixel:RGBA, pixelMask:UInt, test:Bool, value:Int;
+			var srcPosition, destPosition, srcPixel:RGBA = 0, destPixel:RGBA = 0, pixelMask:UInt, test:Bool, value:Int;
 
 			for (y in 0...destView.height)
 			{
@@ -1383,7 +1383,7 @@ class ImageDataUtil
 		{
 			var format = image.buffer.format;
 			var length = Std.int(data.length / 4);
-			var pixel:RGBA;
+			var pixel:RGBA = 0;
 
 			for (i in 0...length)
 			{

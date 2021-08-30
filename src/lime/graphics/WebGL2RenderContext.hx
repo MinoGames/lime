@@ -4575,7 +4575,7 @@ public inline function uniform1fv(location:GLUniformLocation, v:Float32Array, ?s
 public inline function uniform1fv(location:GLUniformLocation, v:Dynamic, ?srcOffset:Int, ?srcLength:Int):Void {
 #end
 
-this.uniform1fv(location, v != null ? v.length : 0, v);
+this.uniform1fv(location, v != null ? v.length : 0, cast v);
 } public inline function uniform1i(location:GLUniformLocation, v0:Int):Void
 {
 	this.uniform1i(location, v0);
@@ -4587,7 +4587,7 @@ public inline function uniform1iv(location:GLUniformLocation, v:Int32Array, ?src
 public inline function uniform1iv(location:GLUniformLocation, v:Dynamic, ?srcOffset:Int, ?srcLength:Int):Void {
 #end
 
-this.uniform1iv(location, v != null ? v.length : 0, v);
+this.uniform1iv(location, v != null ? v.length : 0, cast v);
 } public inline function uniform1ui(location:GLUniformLocation, v0:Int):Void
 {
 	this.uniform1ui(location, v0);
@@ -4595,7 +4595,7 @@ this.uniform1iv(location, v != null ? v.length : 0, v);
 
 public inline function uniform1uiv(location:GLUniformLocation, v:UInt32Array, ?srcOffset:Int, ?srcLength:Int):Void
 {
-	this.uniform1uiv(location, v != null ? v.length : 0, v);
+	this.uniform1uiv(location, v != null ? v.length : 0, cast v);
 }
 
 public inline function uniform2f(location:GLUniformLocation, v0:Float, v1:Float):Void
@@ -4609,7 +4609,7 @@ public inline function uniform2fv(location:GLUniformLocation, v:Float32Array, ?s
 public function uniform2fv(location:GLUniformLocation, v:Dynamic, ?srcOffset:Int, ?srcLength:Int):Void {
 #end
 
-this.uniform2fv(location, v != null ? v.length >> 1 : 0, v);
+this.uniform2fv(location, v != null ? v.length >> 1 : 0, cast v);
 } public inline function uniform2i(location:GLUniformLocation, v0:Int, v1:Int):Void
 {
 	this.uniform2i(location, v0, v1);
@@ -4621,7 +4621,7 @@ public inline function uniform2iv(location:GLUniformLocation, v:Int32Array, ?src
 public inline function uniform2iv(location:GLUniformLocation, v:Dynamic, ?srcOffset:Int, ?srcLength:Int):Void {
 #end
 
-this.uniform2iv(location, v != null ? v.length >> 1 : 0, v);
+this.uniform2iv(location, v != null ? v.length >> 1 : 0, cast v);
 } public inline function uniform2ui(location:GLUniformLocation, v0:Int, v1:Int):Void
 {
 	this.uniform2ui(location, v0, v1);
@@ -4629,7 +4629,7 @@ this.uniform2iv(location, v != null ? v.length >> 1 : 0, v);
 
 public inline function uniform2uiv(location:GLUniformLocation, v:UInt32Array, ?srcOffset:Int, ?srcLength:Int):Void
 {
-	this.uniform2uiv(location, v != null ? v.length >> 1 : 0, v);
+	this.uniform2uiv(location, v != null ? v.length >> 1 : 0, cast v);
 }
 
 public inline function uniform3f(location:GLUniformLocation, v0:Float, v1:Float, v2:Float):Void
@@ -4643,7 +4643,7 @@ public inline function uniform3fv(location:GLUniformLocation, v:Float32Array, ?s
 public inline function uniform3fv(location:GLUniformLocation, v:Dynamic, ?srcOffset:Int, ?srcLength:Int):Void {
 #end
 
-this.uniform3fv(location, v != null ? Std.int(v.length / 3) : 0, v);
+this.uniform3fv(location, v != null ? Std.int(v.length / 3) : 0, cast v);
 } public inline function uniform3i(location:GLUniformLocation, v0:Int, v1:Int, v2:Int):Void
 {
 	this.uniform3i(location, v0, v1, v2);
@@ -4655,7 +4655,7 @@ public inline function uniform3iv(location:GLUniformLocation, v:Int32Array, ?src
 public inline function uniform3iv(location:GLUniformLocation, v:Dynamic, ?srcOffset:Int, ?srcLength:Int):Void {
 #end
 
-this.uniform3iv(location, v != null ? Std.int(v.length / 3) : 0, v);
+this.uniform3iv(location, v != null ? Std.int(v.length / 3) : 0, cast v);
 } public inline function uniform3ui(location:GLUniformLocation, v0:Int, v1:Int, v2:Int):Void
 {
 	this.uniform3ui(location, v0, v1, v2);
@@ -4663,7 +4663,7 @@ this.uniform3iv(location, v != null ? Std.int(v.length / 3) : 0, v);
 
 public inline function uniform3uiv(location:GLUniformLocation, v:UInt32Array, ?srcOffset:Int, ?srcLength:Int):Void
 {
-	this.uniform3uiv(location, v != null ? Std.int(v.length / 3) : 0, v);
+	this.uniform3uiv(location, v != null ? Std.int(v.length / 3) : 0, cast v);
 }
 
 public inline function uniform4f(location:GLUniformLocation, v0:Float, v1:Float, v2:Float, v3:Float):Void
@@ -4677,7 +4677,7 @@ public inline function uniform4fv(location:GLUniformLocation, v:Float32Array, ?s
 public inline function uniform4fv(location:GLUniformLocation, v:Dynamic, ?srcOffset:Int, ?srcLength:Int):Void {
 #end
 
-this.uniform4fv(location, v != null ? v.length >> 2 : 0, v);
+this.uniform4fv(location, v != null ? v.length >> 2 : 0, cast v);
 } public inline function uniform4i(location:GLUniformLocation, v0:Int, v1:Int, v2:Int, v3:Int):Void
 {
 	this.uniform4i(location, v0, v1, v2, v3);
@@ -4689,7 +4689,7 @@ public inline function uniform4iv(location:GLUniformLocation, v:Int32Array, ?src
 public inline function uniform4iv(location:GLUniformLocation, v:Dynamic, ?srcOffset:Int, ?srcLength:Int):Void {
 #end
 
-this.uniform4iv(location, v != null ? v.length >> 2 : 0, v);
+this.uniform4iv(location, v != null ? v.length >> 2 : 0, cast v);
 } public inline function uniform4ui(location:GLUniformLocation, v0:Int, v1:Int, v2:Int, v3:Int):Void
 {
 	this.uniform4ui(location, v0, v1, v2, v3);
@@ -4697,7 +4697,7 @@ this.uniform4iv(location, v != null ? v.length >> 2 : 0, v);
 
 public inline function uniform4uiv(location:GLUniformLocation, v:UInt32Array, ?srcOffset:Int, ?srcLength:Int):Void
 {
-	this.uniform4uiv(location, v != null ? v.length >> 2 : 0, v);
+	this.uniform4uiv(location, v != null ? v.length >> 2 : 0, cast v);
 }
 
 public inline function uniformBlockBinding(program:GLProgram, uniformBlockIndex:Int, uniformBlockBinding:Int):Void

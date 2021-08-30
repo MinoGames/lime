@@ -15,35 +15,30 @@ import lime._internal.backend.native.NativeCFFI;
 @:access(lime._internal.backend.native.NativeCFFI)
 #end
 @:access(haxe.io.Bytes)
+@:transitive
 abstract DataPointer(DataPointerType) to DataPointerType
 {
-	@:noCompletion private function new(data:DataPointerType)
+	@:noCompletion private function new(data:#if !doc_gen DataPointerType #else Dynamic #end)
 	{
 		this = data;
 	}
 
+	#if (lime_cffi && !js && !doc_gen)
 	@:from @:noCompletion private static function fromInt(value:Int):DataPointer
 	{
 		#if (lime_cffi && !macro)
 		var float:Float = value;
 		return new DataPointer(float);
-		#elseif (js && !doc_gen)
-		return new DataPointer(new DataPointerObject(value));
 		#else
-		return null;
+		return cast value;
 		#end
 	}
-
+	#else
 	@:from @:noCompletion private static function fromFloat(value:Float):DataPointer
 	{
-		#if (lime_cffi && !macro)
-		return new DataPointer(value);
-		#elseif (js && !doc_gen)
-		return new DataPointer(new DataPointerObject(Std.int(value)));
-		#else
-		return null;
-		#end
+		return cast value;
 	}
+	#end
 
 	#if (cpp && !cppia && !doc_gen)
 	#if (haxe_ver < 4)
@@ -58,10 +53,12 @@ abstract DataPointer(DataPointerType) to DataPointerType
 	}
 	#end
 
+	#if !debug
 	@:generic @:from @:noCompletion public static inline function fromPointer<T>(pointer:Pointer<T>):DataPointer
 	{
 		return untyped __cpp__('(uintptr_t){0}', pointer.ptr);
 	}
+	#end
 	#end
 
 	@:from @:noCompletion public static function fromBytesPointer(pointer:BytePointer):DataPointer
