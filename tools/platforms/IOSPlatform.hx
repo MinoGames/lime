@@ -576,6 +576,7 @@ class IOSPlatform extends PlatformTarget
 		ProjectHelper.recursiveSmartCopyTemplate(project, "iphone/PROJ/haxe", projectDirectory + "/haxe", context, true, false);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "haxe", projectDirectory + "/haxe", context, true, false);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "iphone/PROJ/Classes", projectDirectory + "/Classes", context, true, false);
+		ProjectHelper.recursiveSmartCopyTemplate(project, "iphone/NotificationServiceExt", targetDirectory + "/NotificationServiceExt", context, true, false);
 		ProjectHelper.recursiveSmartCopyTemplate(project, "iphone/PROJ/Images.xcassets", projectDirectory + "/Images.xcassets", context, true, false);
 		System.copyFileTemplate(project.templatePaths, "iphone/PROJ/PROJ-Info.plist", projectDirectory + "/" + project.app.file + "-Info.plist", context,
 			true, false);
