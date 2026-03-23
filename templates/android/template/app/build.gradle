@@ -12,6 +12,7 @@ repositories {
 android {
 	compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
 	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
+	namespace "com.minogames.cats.client"
 
 	bundle {
 		language {

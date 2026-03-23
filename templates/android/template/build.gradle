@@ -7,7 +7,7 @@ buildscript {
 	}
 	dependencies {
 		classpath 'com.android.tools.build:gradle:::ANDROID_GRADLE_PLUGIN::'
-		
+
 		// NOTE: Do not place your application dependencies here; they belong
 		// in the individual module build.gradle files
 	}
@@ -35,18 +35,19 @@ configure(subprojects.findAll {!it.file('build.gradle').exists() && it.file('bui
 			google()
         	jcenter()
 		}
-		
+
 		dependencies {
 			classpath 'com.android.tools.build:gradle:::ANDROID_GRADLE_PLUGIN::'
 		}
 	}
-	
+
 	apply plugin: 'android-library'
-	
+
 	android {
 		compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
 		buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
-		
+		namespace "com.minogames.cats.client"
+
 		sourceSets {
 			main {
 				manifest.srcFile 'AndroidManifest.xml'
@@ -55,7 +56,7 @@ configure(subprojects.findAll {!it.file('build.gradle').exists() && it.file('bui
 			}
 		}
 	}
-	
+
 	dependencies {
 		implementation fileTree(dir: 'libs', include: ['*.jar'])
 		implementation project(':deps:extension-api')
