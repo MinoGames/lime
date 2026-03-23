@@ -44,9 +44,21 @@ configure(subprojects.findAll {!it.file('build.gradle').exists() && it.file('bui
 	apply plugin: 'android-library'
 
 	android {
+		def manifestFile = project.file('AndroidManifest.xml')
+		if (manifestFile.exists()) {
+			def manifestPackage = new groovy.xml.XmlSlurper(false, false)
+				.parse(manifestFile)
+				.attributes()['package']
+				?.toString()
+
+			if (manifestPackage) {
+				namespace manifestPackage
+				// if this line complains, try: namespace = manifestPackage
+			}
+		}
+
 		compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
 		buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
-		namespace "com.minogames.cats.client"
 
 		sourceSets {
 			main {
