@@ -13,19 +13,7 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
-	def manifestFile = project.file('AndroidManifest.xml')
-	if (manifestFile.exists()) {
-		def manifestPackage = new groovy.xml.XmlSlurper(false, false)
-			.parse(manifestFile)
-			.attributes()['package']
-			?.toString()
-
-		if (manifestPackage) {
-			namespace manifestPackage
-			// if this line complains, try: namespace = manifestPackage
-		}
-	}
-
+	namespace "com.minogames.cats.client"
 	compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
 	buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 }
