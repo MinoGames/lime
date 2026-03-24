@@ -18,7 +18,6 @@ import android.content.pm.PackageManager;
 import android.hardware.usb.*;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Build;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -571,9 +570,9 @@ public class HIDDeviceManager {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                     // For Android 12 (API 31) and above, use FLAG_MUTABLE or FLAG_IMMUTABLE
                     // FLAG_MUTABLE is often necessary for broadcast intents that need to be updated
-                    permissionIntent = PendingIntent.getBroadcast(mContext, 0, intent, PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+                    permissionIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(HIDDeviceManager.ACTION_USB_PERMISSION), PendingIntent.FLAG_MUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
                 } else {
-                    permissionIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
+                    permissionIntent = PendingIntent.getBroadcast(mContext, 0, new Intent(HIDDeviceManager.ACTION_USB_PERMISSION), 0);
                 }
                 mUsbManager.requestPermission(usbDevice, permissionIntent);
             } catch (Exception e) {
