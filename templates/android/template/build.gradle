@@ -34,6 +34,7 @@ configure(subprojects.findAll {!it.file('build.gradle').exists() && it.file('bui
 		repositories {
 			google()
         	mavenCentral()
+			maven { url "https://jcenter.bintray.com/" }
 		}
 
 		dependencies {

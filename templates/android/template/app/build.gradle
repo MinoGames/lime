@@ -8,6 +8,7 @@ apply plugin: 'com.android.application'
 repositories {
 	google()
     mavenCentral()
+	maven { url "https://jcenter.bintray.com/" }
 }
 
 android {
